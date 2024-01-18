@@ -1,28 +1,22 @@
 const mongoose = require("mongoose");
 
-//user schema/model
+// User schema/model
 const commentSchema = new mongoose.Schema(
   {
-    //username of the commenter
+    // Username of the commenter
     username: {
       type: String,
       required: true,
       label: "username",
     },
-    //content of the comment
+    // Content of the comment
     comment: {
-        type: String,
-        required: true,
-        label: "comment",
-      },
-      //name of the station the comment is associated with
-    stationName: {
       type: String,
       required: true,
-      label: "stationName",
-    },
+      label: "comment",
+    }
   },
   { collection: "comments" }
 );
 
-module.exports = mongoose.model('stationComments', commentSchema)
+module.exports = mongoose.model('comments', commentSchema);
