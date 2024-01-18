@@ -11,17 +11,16 @@ import HomePage from "./components/pages/homePage";
 import LoginPage from "./components/pages/loginPage";
 import AddCommentPage2 from "./components/pages/addCommentPage2";
 
+import RecipeForm from "./components/pages/recipeForm";
 
 import Signup from "./components/pages/registerPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
  
-import MbtaAlerts from "./components/pages/mbtaAlert";
- 
-import TrainTrackerPage from "./components/pages/trainTrackerPage";
- 
-import RoutePatterns from "./components/pages/routePatterns";
+
 
 import ViewCommentsPage from "./components/pages/viewCommentsPage"
+//import landingpage
+
 
 
 
@@ -49,11 +48,10 @@ const App = () => {
           <Route exact path="/loginPage" element={<LoginPage />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
-          <Route path="/trainTrackerPage" element={<TrainTrackerPage />} />
-          <Route exact path="/mbtaAlert" element={<MbtaAlerts />} />
-          <Route exact path="/routePatterns" element={<RoutePatterns />} />
           <Route exact path="/addCommentPage2" element={<AddCommentPage2 />} />
           <Route exact path="/viewComments" element={<ViewCommentsPage />} />
+      
+          <Route exact path="/recipeForm" element={<RecipeForm />} />
 
         </Routes>
       </UserContext.Provider>
