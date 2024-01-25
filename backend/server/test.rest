@@ -79,6 +79,28 @@ Content-Type: application/json
     "stationName":"bayline"
 }
 
+###
+POST http://localhost:8081/recipe/add
+Content-Type: application/json
+
+{
+    "title": "Sample Recipe Title",
+    "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
+    "instructions": ["Step 1", "Step 2", "Step 3"],
+    "imageUrl": "http://example.com/image.jpg"
+}
+
+###
+GET http://localhost:8081/recipe/recipes
+Content-Type: application/json
+
+{
+    
+}
+
+
+
+
 
 
 
