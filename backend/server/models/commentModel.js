@@ -14,7 +14,11 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
       label: "comment",
-    }
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { collection: "comments" }
 );
