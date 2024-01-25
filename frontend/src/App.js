@@ -15,18 +15,15 @@ import RecipeForm from "./components/pages/recipeForm";
 
 import Signup from "./components/pages/registerPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
- 
+
+import RecipeList from "./components/pages/recipeList";
 
 
 import ViewCommentsPage from "./components/pages/viewCommentsPage"
 //import landingpage
 
-
-
-
-
 import { createContext, useState, useEffect } from "react";
- 
+
 import getUserInfo from "./utilities/decodeJwt";
  
 export const UserContext = createContext();
@@ -43,16 +40,14 @@ const App = () => {
       <Navbar />
       <UserContext.Provider value={user}>
         <Routes>
-          <Route exact path="/" element={<LandingPage />} />
+        <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/homePage" element={<HomePage />} />
           <Route exact path="/loginPage" element={<LoginPage />} />
+          <Route exact path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/signup" element={<Signup />} />
-          <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
-          <Route exact path="/addCommentPage2" element={<AddCommentPage2 />} />
-          <Route exact path="/viewComments" element={<ViewCommentsPage />} />
-      
           <Route exact path="/recipeForm" element={<RecipeForm />} />
-
+       
+          <Route exact path="/recipeList" element={<RecipeList />} />
         </Routes>
       </UserContext.Provider>
     </>
