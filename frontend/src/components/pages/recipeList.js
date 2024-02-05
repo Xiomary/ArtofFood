@@ -1,47 +1,27 @@
-// recipeList.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+//import recipe card
+import RecipeCard from './recipeCard';
 
 const RecipeList = () => {
-    const [recipes, setRecipes] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const [recipes, setRecipes] = useState([]);
 
-    useEffect(() => {
-        const fetchRecipes = async () => {
-            try {
-                const response = await fetch('http://localhost:8081/recipe/recipes');
-                if (!response.ok) {
-                    throw new Error('Something went wrong!');
-                }
-                const data = await response.json();
-                setRecipes(data);
-            } catch (error) {
-                console.error('Failed to fetch recipes:', error);
-            }
-            setIsLoading(false);
-        };
+  useEffect(() => {
+    axios.get('http://localhost:8081/recipe/recipes')
+      .then(res => {
+        setRecipes(res.data);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
-        fetchRecipes();
-    }, []);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <div>
-            <h1>Recipes</h1>
-            <ul>
-                {recipes.map(recipe => (
-                    <li key={recipe._id}>
-                        <h2>{recipe.title}</h2>
-                        <p>Ingredients: {recipe.ingredients.join(', ')}</p>
-                        <p>Instructions: {recipe.instructions.join(' -> ')}</p>
-                        {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.title} style={{ maxWidth: '100%' }} />}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <h2>Recipe List</h2>
+      {recipes.map(recipe => (
+        <RecipeCard key={recipe._id} recipe={recipe} />
+      ))}
+    </div>
+  );
 };
 
 export default RecipeList;
