@@ -46,7 +46,6 @@ const App = () => {
           <Route exact path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/recipeForm" element={<RecipeForm />} />
-       
           <Route exact path="/recipeList" element={<RecipeList />} />
         </Routes>
       </UserContext.Provider>
