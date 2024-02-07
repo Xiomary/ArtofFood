@@ -5,28 +5,34 @@ import Nav from "react-bootstrap/Nav";
 import ReactNavbar from "react-bootstrap/Navbar";
 import "./pages/appNavBar.css";
 
-// Here, we display our Navbar
 export default function Navbar() {
-  // We are pulling in the user's info but not using it for now.
-  // Warning disabled:
-  // eslint-disable-next-line
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
-    setUser(getUserInfo());
+    const userInfo = getUserInfo();
+    setUser(userInfo);
   }, []);
 
-  // if (!user) return null   - for now, let's show the bar even not logged in.
-  // we have an issue with getUserInfo() returning null after a few minutes
-  // it seems.
   return (
-    <ReactNavbar bg="dark" variant="dark">
+    <ReactNavbar bg="dark" variant="dark" sticky="top">
       <Container>
         <Nav className="me-auto">
-          <Nav.Link href="/">Start</Nav.Link>
-          <Nav.Link href="/homePage">Home</Nav.Link>
-          <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
-
-          <Nav.Link href="/recipeForm">New Recipe</Nav.Link>
+          {user ? (
+            // Links to display when user is logged in
+            <>
+              <Nav.Link href="/homePage">Home</Nav.Link>
+              <Nav.Link href="/recipeList">Search</Nav.Link>
+              <Nav.Link href="/recipeForm">New Recipe</Nav.Link>
+              <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
+            </>
+          ) : (
+            // Links to display when user is not logged in
+            <>
+              <Nav.Link href="/loginPage">Login</Nav.Link>
+              <Nav.Link href="/signupPage">Sign up</Nav.Link>
+              <Nav.Link href="/recipeList">Search</Nav.Link>
+            </>
+          )}
         </Nav>
       </Container>
     </ReactNavbar>
