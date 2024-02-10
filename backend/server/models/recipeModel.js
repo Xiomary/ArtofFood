@@ -1,29 +1,41 @@
-const mongoose = require('mongoose');
-const commentSchema = require('./comment'); // Importing the comment schema from another js file 
+const mongoose = require("mongoose");
+const Comment = require("./commentModel"); // Import the comment model
+const Rating = require("./ratingModel"); // Import the rating model
 
-// Defining the schema for recipes
+// Define the recipe schema
 const recipeSchema = new mongoose.Schema({
   title: {
-    type: String,    // Type of the title field is String
-    required: true   // The title field is required
+    type: String,
+    required: true,
   },
   ingredients: {
-    type: [String],  // Type of the ingredients field is an array of Strings
-    required: true   // The ingredients field is required
+    type: [String],
+    required: true,
   },
   instructions: {
-    type: String,    // Type of the instructions field is String
-    required: true   // The instructions field is required
+    type: [String],
+    required: true,
+  },
+  cuisineType: {
+    type: String,
+    required: false,
   },
   imageUrl: {
-    type: String,    // Type of the imageUrl field is String
-    required: true   // The imageUrl field is required
+    type: String,
+    required: true,
   },
-  comments: [commentSchema] // Embedding the comment schema here, so each recipe can have its own comments
+  // Add a user reference to associate the recipe with a user
+  userId: {
+    type : mongoose.Schema.Types.ObjectId, ref: 'users',
+    required: true,
+    label: 'userId',
+  },
+  comments: [Comment.schema], 
+  ratings: [Rating.schema], // Embed the rating schema
 });
 
-// Creating a model from the schema
-const Recipe = mongoose.model('Recipe', recipeSchema);
+// Create a model from the recipe schema
+const Recipe = mongoose.model("Recipe", recipeSchema);
 
-// Exporting the model to be used in other parts of the application
+// Export the Recipe model
 module.exports = Recipe;
