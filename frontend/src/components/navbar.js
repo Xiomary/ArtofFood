@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import getUserInfo from "../utilities/decodeJwt";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
-import ReactNavbar from "react-bootstrap/Navbar";
-import "./pages/appNavBar.css";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faSearch, faPlusSquare, faUser, faUtensils } from '@fortawesome/free-solid-svg-icons';
 
-export default function Navbar() {
+export default function AppNavbar() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -14,27 +16,46 @@ export default function Navbar() {
   }, []);
 
   return (
-    <ReactNavbar bg="dark" variant="dark" sticky="top">
+    <Navbar expand="lg" variant="dark" bg="dark" sticky="top"> {/* Changed to bg="dark" */}
       <Container>
-        <Nav className="me-auto">
-          {user ? (
-            // Links to display when user is logged in
-            <>
-              <Nav.Link href="/homePage">Home</Nav.Link>
-              <Nav.Link href="/recipeList">Search</Nav.Link>
-              <Nav.Link href="/recipeForm">New Recipe</Nav.Link>
-              <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
-            </>
-          ) : (
-            // Links to display when user is not logged in
-            <>
-              <Nav.Link href="/loginPage">Login</Nav.Link>
-              <Nav.Link href="/signupPage">Sign up</Nav.Link>
-              <Nav.Link href="/recipeList">Search</Nav.Link>
-            </>
-          )}
-        </Nav>
+        <Navbar.Brand href="/homePage">
+          <FontAwesomeIcon icon={faUtensils} /> Art of Food
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            {user ? (
+              <>
+                <Nav.Link href="/homePage">
+                  <FontAwesomeIcon icon={faHome} /> Home
+                </Nav.Link>
+                <Nav.Link href="/recipeList">
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </Nav.Link>
+                <Nav.Link href="/recipeForm">
+                  <FontAwesomeIcon icon={faPlusSquare} /> New Recipe
+                </Nav.Link>
+                <NavDropdown title="Account" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/privateUserProfile">
+                    <FontAwesomeIcon icon={faUser} /> Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+                </NavDropdown>
+              </>
+            ) : (
+              <>
+                <Nav.Link href="/loginPage">
+                  <FontAwesomeIcon icon={faUser} /> Login
+                </Nav.Link>
+                <Nav.Link href="/recipeList">
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Container>
-    </ReactNavbar>
+    </Navbar>
   );
 }
