@@ -1,160 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import getUserInfo from "../../utilities/decodeJwt";
-const PRIMARY_COLOR = "#cc5c99";
-const SECONDARY_COLOR = "#0c0c1f";
-const url = "http://localhost:8081/user/login";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import getUserInfo from '../../utilities/decodeJwt';
+
+const PRIMARY_COLOR = '#f0ad4e';
+const INPUT_BORDER_COLOR = '#ced4da';
+const url = 'http://localhost:8081/user/login';
 
 const Login = () => {
   const [user, setUser] = useState(null);
-  const [data, setData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
-  const [light, setLight] = useState(false);
-  const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
-  const [bgText, setBgText] = useState("Light Mode");
+  const [data, setData] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  //Styles
+  // Adjusted the maxWidth for a bigger form and increased padding
+  const cardStyle = {
+    maxWidth: '500px', // Increased from 400px to 500px
+    margin: 'auto',
+    padding: '3rem', // Increased padding for a bigger look
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'white',
+    borderRadius: '8px',
+    position: 'relative',
+    top: '50%',
+    transform: 'translateY(-50%)',
+  };
 
-  let labelStyling = {
-    color: PRIMARY_COLOR,
-    fontWeight: "bold",
-    textDecoration: "none",
+  const backgroundImageUrl = '/images/geometric-background.jpeg';
+
+  const inputStyle = {
+    border: `1px solid ${INPUT_BORDER_COLOR}`,
+    borderRadius: '20px',
+    marginBottom: '1rem',
   };
-  //Background Color
-  let backgroundStyling = { background: bgColor };
-  let buttonStyling = {
-    background: PRIMARY_COLOR,
-    borderStyle: "none",
-    color: bgColor,
+
+  const buttonStyling = {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+    borderRadius: '20px',
+    color: 'white',
+    fontWeight: 'bold',
+    padding: '0.5rem 1rem',
+    fontSize: '1rem',
+    lineHeight: '1.5',
+    transition: 'color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+    marginTop: '1rem',
+    display: 'block',
+    width: '100%',
   };
-  
+
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
   };
 
   useEffect(() => {
-    const obj = getUserInfo(user);
-    setUser(obj);
-
-    if (light) {
-      setBgColor("white");
-      setBgText("Dark mode");
-    } else {
-      setBgColor(SECONDARY_COLOR);
-      setBgText("Light mode");
+    const userInfo = getUserInfo(localStorage.getItem('accessToken'));
+    if (userInfo) {
+      setUser(userInfo);
     }
-  }, [light]);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/homePage');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
-    console.log("Submitting form...");
     e.preventDefault();
     try {
       const { data: res } = await axios.post(url, data);
-      const { accessToken } = res;
-      //store token in localStorage
-      localStorage.setItem("accessToken", accessToken);
-      navigate("/homePage");
+      localStorage.setItem('accessToken', res.accessToken);
+      navigate('/homePage');
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         setError(error.response.data.message);
       }
     }
   };
 
-  // Redirect to home page if user is already logged in
-
   if (user) {
-    navigate("/homePage");
-    return;
+    navigate('/homePage');
+    return null;
   }
 
   return (
-    <>
-      <section className="vh-100">
-        <div className="container-fluid h-custom vh-100">
-          <div
-            className="row d-flex justify-content-center align-items-center h-100 "
-            style={backgroundStyling}
-          >
-            <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-              <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label style={labelStyling}>Username</Form.Label>
-                  <Form.Control
-                    type="username"
-                    name="username"
-                    onChange={handleChange}
-                    placeholder="Enter username"
-                  />
-                  <Form.Text className="text-muted">
-                    We just might sell your data
-                  </Form.Text>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label style={labelStyling}>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                  <Form.Text className="text-muted pt-1">
-                    Dont have an account?
-                    <span>
-                      <Link to="/signup" style={labelStyling}>
-                        {" "}
-                        Sign up
-                      </Link>
-                    </span>
-                  </Form.Text>
-                </Form.Group>
-                <div class="form-check form-switch">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="flexSwitchCheckDefault"
-                    onChange={() => {
-                      setLight(!light);
-                    }}
-                  />
-                  <label
-                    class="form-check-label"
-                    for="flexSwitchCheckDefault"
-                    className="text-muted"
-                  >
-                    {bgText}
-                  </label>
-                </div>
-                {error && (
-                  <div style={labelStyling} className="pt-3">
-                    {error}
-                  </div>
-                )}
-                <Button
-                  variant="primary"
-                  type="submit"
-                  onClick={handleSubmit}
-                  style={buttonStyling}
-                  className="mt-2"
-                >
-                  Log In
-                </Button>
-              </Form>
-            </div>
-          </div>
+    <div style={{ height: '100vh', background: `url(${backgroundImageUrl}) center / cover no-repeat` }}>
+      <Form style={cardStyle} onSubmit={handleSubmit}>
+        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Login</h2> {/* Added Login heading */}
+        <Form.Group controlId='formBasicEmail'>
+          <Form.Control
+            type='text'
+            name='username'
+            value={data.username}
+            onChange={handleChange}
+            placeholder='Enter username'
+            style={inputStyle}
+          />
+        </Form.Group>
+        <Form.Group controlId='formBasicPassword'>
+          <Form.Control
+            type='password'
+            name='password'
+            value={data.password}
+            onChange={handleChange}
+            placeholder='Password'
+            style={inputStyle}
+          />
+        </Form.Group>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        <Button type='submit' style={buttonStyling}>
+          Log In
+        </Button>
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <Link to='/signup'>Don't have an account? Sign up</Link>
         </div>
-      </section>
-    </>
+      </Form>
+    </div>
   );
 };
 
