@@ -19,9 +19,9 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8081/user/getAll
-Content-Type: application/json
 
 
+###
 POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
@@ -32,20 +32,8 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:8081/user/getUserById
-Content-Type: application/json 
+GET http://localhost:8081/user/getUserById/65a2bf5123aa136f896c08d6
 
-{
-    "userId" : "635ab8dfc407faf9f73deaf1"
-}
-
-###
-GET  http://localhost:8081/user/getUserById
-Content-Type: application/json 
-
-{
-    "userId" : "634edb2a16710b2cda6fb370"
-}
 
 ###
 POST  http://localhost:8081/user/deleteAll
@@ -87,8 +75,10 @@ Content-Type: application/json
     "title": "Sample Recipe Title",
     "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
     "instructions": ["Step 1", "Step 2", "Step 3"],
-    "imageUrl": "http://example.com/image.jpg"
+    "imageUrl": "",
+    "userId": "643e8daaa57ef1afb33eb1ca"
 }
+
 
 ###
 GET http://localhost:8081/recipe/recipes
@@ -98,5 +88,11 @@ Content-Type: application/json
     
 }
 
-//delete recipes
 
+
+###
+GET http://localhost:8081/recipe/recipes/65c6c232e44dab5f1004c318
+
+###
+//get user by id
+GET http://localhost:8081/user/getUserById/65c6c232e44dab5f1004c318
