@@ -76,12 +76,13 @@ Content-Type: application/json
     "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
     "instructions": ["Step 1", "Step 2", "Step 3"],
     "imageUrl": "",
+    "cuisineType": "Spanish",
     "userId": "643e8daaa57ef1afb33eb1ca"
 }
 
 
 ###
-GET http://localhost:8081/recipe/recipes
+GET http://localhost:8081/recipe/recipeGetAll
 Content-Type: application/json
 
 {
@@ -91,8 +92,37 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:8081/recipe/recipes/65c6c232e44dab5f1004c318
-
-###
 //get user by id
 GET http://localhost:8081/user/getUserById/65c6c232e44dab5f1004c318
+
+###
+PUT http://localhost:8081/recipe/edit/65c6b72f975faa073a53244d
+
+Content-Type: application/json
+
+{
+  "title": "Sample Recipe Title",
+    "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
+    "instructions": ["Step 1", "Step 2", "Step 3"],
+    "imageUrl": "",
+    "cuisineType": "Spanish",
+}
+
+//rating a recipe
+POST http://localhost:8081/recipe/rateRecipe/65c6b812975faa073a532458
+
+###
+//get recipe by id
+
+GET http://localhost:8081/recipe/65c6b812975faa073a532458
+Content-Type: application/json
+
+
+###
+POST http://localhost:8081/ratings/add/65c6b812975faa073a532458
+Content-Type: application/json
+
+{
+  "username": "xiomary33",
+  "score": 3
+}
