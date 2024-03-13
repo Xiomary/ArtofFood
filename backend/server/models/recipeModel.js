@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Comment = require("./commentModel"); // Import the comment model
-const Rating = require("./ratingModel"); // Import the rating model
+
 
 // Define the recipe schema
 const recipeSchema = new mongoose.Schema({
@@ -18,11 +18,11 @@ const recipeSchema = new mongoose.Schema({
   },
   cuisineType: {
     type: String,
-    required: false,
+    required: true,
   },
   imageUrl: {
     type: String,
-    required: true,
+    required: false,
   },
   // Add a user reference to associate the recipe with a user
   userId: {
@@ -31,7 +31,7 @@ const recipeSchema = new mongoose.Schema({
     label: 'userId',
   },
   comments: [Comment.schema], 
-  ratings: [Rating.schema], // Embed the rating schema
+
 });
 
 // Create a model from the recipe schema
