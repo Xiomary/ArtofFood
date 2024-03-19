@@ -126,3 +126,9 @@ Content-Type: application/json
   "username": "xiomary33",
   "score": 3
 }
+
+###
+//get all ratings
+GET http://localhost:8081/ratings/getAll
+
+
