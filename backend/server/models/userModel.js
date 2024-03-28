@@ -1,35 +1,29 @@
 const mongoose = require("mongoose");
 
-//user schema/model
+// User schema/model
 const newUserSchema = new mongoose.Schema(
   {
-    //username of the user 
+    // Username of the user 
     username: {
       type: String,
       required: true,
       label: "username",
     },
-    //users email
+    // User's email
     email: {
       type: String,
       required: true,
       label: "email",
     },
+    // User's password
     password: {
       required: true,
       type: String,
-      min : 8
-    },   
-    //users fav route 
-    favroute: {
-      type: String,
-      required: false,
-      label: "favroute",
+      min: 8
     },
-    favline:{
-      type: String,
-      required: false,
-      label: "favline",
+   
+    bio: {
+      type: String
     },
     date: {
       type: Date,
@@ -39,4 +33,4 @@ const newUserSchema = new mongoose.Schema(
   { collection: "users" }
 );
 
-module.exports = mongoose.model('users', newUserSchema)
+module.exports = mongoose.model('users', newUserSchema);
