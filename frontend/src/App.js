@@ -1,58 +1,52 @@
-import React from "react";
-// We use Route in order to define the different routes of our application
+import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import viewCommentsPage from './components/pages/viewCommentsPage';
-
-// We import all the components we need in our app
 import Navbar from "./components/navbar";
 import LandingPage from "./components/pages/landingPage";
- 
-import HomePage from "./components/pages/homePage";
-import LoginPage from "./components/pages/loginPage";
-import AddCommentPage2 from "./components/pages/addCommentPage2";
-
-import RecipeForm from "./components/pages/recipeForm";
-
-import Signup from "./components/pages/registerPage";
+import HomePage from "./components/pages/HomePage";
+import Login from "./components/pages/LoginPage";
+import Signup from "./components/pages/RegisterPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
-
-import RecipeList from "./components/pages/recipeList";
-
-
-import ViewCommentsPage from "./components/pages/viewCommentsPage"
-//import landingpage
-
-import { createContext, useState, useEffect } from "react";
-
+import RecipeForm from "./components/pages/RecipeForm";
+import RecipeList from "./components/pages/RecipeList";
+import RecipeDetails from "./components/pages/RecipeDetails";
+import { createContext } from "react";
 import getUserInfo from "./utilities/decodeJwt";
- 
+import SearchComponent from "./components/pages/SearchComponent";
+//import star rating
+import StarRating from "./components/pages/StarRatings";
+import UserRecipes from "./components/pages/UserRecipes";
+//import recipe edit form
+import RecipeEditForm from "./components/pages/RecipeEditForm";
+import AddCommentPage2 from "./components/pages/addCommentPage2";
 export const UserContext = createContext();
- 
+
 const App = () => {
   const [user, setUser] = useState();
- 
+
   useEffect(() => {
     setUser(getUserInfo());
   }, []);
-    //Providing necessary components for navigation
+
   return (
     <>
       <Navbar />
-      <UserContext.Provider value={user}>
-        <Routes>
+      <Routes>
         <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/homePage" element={<HomePage />} />
-          <Route exact path="/loginPage" element={<LoginPage />} />
-          <Route exact path="/privateUserProfile" element={<PrivateUserProfile />} />
-          <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/recipeForm" element={<RecipeForm />} />
-          <Route exact path="/recipeList" element={<RecipeList />} />
-        </Routes>
-      </UserContext.Provider>
+        <Route exact path="/homePage" element={<HomePage />} />
+        <Route exact path="/loginPage" element={<Login />} />
+        <Route exact path="/privateUserProfile" element={<PrivateUserProfile />} />
+        <Route exact path="/signup" element={<Signup />} />
+        <Route exact path="/recipeForm" element={<RecipeForm />} />
+        <Route exact path="/recipeList" element={<RecipeList />} />
+        <Route exact path="/recipeDetails/:id" element={<RecipeDetails />} />
+        <Route exact path="/searchComponent" element={<SearchComponent />} />
+        <Route exact path="/ratingComponent/:id" element={<StarRating />} />
+        <Route exact path="/recipeEdit/:id" element={<RecipeEditForm />} />
+        <Route exact path="/addCommentPage2" element={<AddCommentPage2 />} />
+       
+      </Routes>
     </>
   );
 };
 
-
-
-export default App
+export default App;
