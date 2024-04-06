@@ -17,7 +17,7 @@ import StarRating from "./components/pages/StarRatings";
 import UserRecipes from "./components/pages/UserRecipes";
 //import recipe edit form
 import RecipeEditForm from "./components/pages/RecipeEditForm";
-import AddCommentPage2 from "./components/pages/addCommentPage2";
+import RecipeCommentForm from "./components/pages/RecipeCommentForm";
 export const UserContext = createContext();
 
 const App = () => {
@@ -42,8 +42,9 @@ const App = () => {
         <Route exact path="/searchComponent" element={<SearchComponent />} />
         <Route exact path="/ratingComponent/:id" element={<StarRating />} />
         <Route exact path="/recipeEdit/:id" element={<RecipeEditForm />} />
-        <Route exact path="/addCommentPage2" element={<AddCommentPage2 />} />
-       
+        <Route path="/addComment/:id" element={<RecipeCommentForm />} />
+
+        
       </Routes>
     </>
   );
