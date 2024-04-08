@@ -6,7 +6,7 @@ const StarRating = ({ newRating, disabled }) => {
         <ReactStars
             count={5}
             onChange={newRating}
-            size={24}
+            size={20}
             activeColor="#ffd700"
             edit={!disabled} // Control interactivity based on the disabled prop
         />
