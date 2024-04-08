@@ -20,19 +20,24 @@ const editCommentRoute = require('./routes/comments/commentEditComment');
 
 
 const recipeCreateRoute = require('./routes/recipes/recipeCreate');
-
-
-const recipeEditRoute = require('./routes/recipes/recipeEdit');
 const recipeDeleteRoute = require('./routes/recipes/recipeDelete');
 const recipeGetAllRoute = require('./routes/recipes/recipeGetAll');
-
+const recipeOwner = require('./routes/recipes/recipeOwner');
 const recipeGetByIdRoute = require('./routes/recipes/recipeGetRecipeById');
 const recipeUpdateRoute = require('./routes/recipes/recipeUpdate');
 
-// Import the new rating routes
-//create rating oute
-//rating create
 const ratingCreateRoute = require('./routes/ratings/ratingCreateRating');
+const ratingGetAllRoute = require('./routes/ratings/ratingsGetAll');
+const ratingAverageRoute = require('./routes/ratings/calculateAverageRating');
+const ratingEditRoute = require('./routes/ratings/ratingEditRating');
+const ratingCheckUserRating = require('./routes/ratings/ratingCheckUserRating');
+
+//file upload
+const fileUploadRoute = require('./routes/images/fileUpload');
+
+
+//rating check user rating
+
 dotenv.config();
 
 const SERVER_PORT = process.env.PORT || 8081;
@@ -55,23 +60,21 @@ app.use('/comment', getAllCommentsRoute);
 app.use('/comment', editCommentRoute);
 
 app.use('/recipe', recipeCreateRoute);
-app.use('/recipe', recipeEditRoute);
 app.use('/recipe', recipeDeleteRoute);
 app.use('/recipe', recipeGetAllRoute);
-//recipe create
-
-
-// Define a parameterized route with the ID included
-// Use the router with the ID parameter included in the route
 app.use('/recipe', recipeGetByIdRoute);
-
+app.use('/recipe', recipeOwner);
 app.use('/recipe', recipeUpdateRoute);
 
-// Rating routes
-// Assuming the rating routes are set to handle endpoints like '/:recipeId/rate' and '/:recipeId/ratings'
+//file upload
+app.use('/file', fileUploadRoute);
 
-
+app.use('/ratings', ratingAverageRoute);
 app.use('/ratings', ratingCreateRoute);
+app.use('/ratings', ratingGetAllRoute);
+app.use('/ratings', ratingEditRoute);
+app.use('/ratings', ratingCheckUserRating);
+
 
 
 app.listen(SERVER_PORT, () => {
