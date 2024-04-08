@@ -21,6 +21,10 @@ const newUserSchema = new mongoose.Schema(
       type: String,
       min: 8
     },
+    imageUrl: {
+      type: String,
+      required: false,
+    },
    
     bio: {
       type: String
