@@ -8,7 +8,7 @@ const StarRating = ({ newRating, disabled }) => {
             onChange={newRating}
             size={20}
             activeColor="#ffd700"
-            edit={!disabled} // Control interactivity based on the disabled prop
+            edit={!disabled} 
         />
     );
 };

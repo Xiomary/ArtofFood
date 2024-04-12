@@ -1,9 +1,7 @@
-// In your route file, e.g., recipeRoutes.js
 const express = require("express");
 const router = express.Router();
 const Recipe = require("../../models/recipeModel");
 const s3UploadMiddleware = require('../../routes/images/fileUpload');
-
 
 router.post("/add", s3UploadMiddleware, async (req, res) => {
   // Now req.imageUrl contains the S3 image URL if an image was uploaded

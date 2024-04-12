@@ -1,53 +1,80 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
-import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup"; // Import ListGroup for listing ingredients
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-const RecipeCard = ({ recipe }) => {
-  const [showModal, setShowModal] = useState(false);
-
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
-  const renderImage = () => {
-    if (recipe.imageUrl) {
-      return <Card.Img variant="top" src={recipe.imageUrl} style={{ height: '250px', objectFit: 'cover' }} />;
-    }
-    return <div style={{ height: '250px', background: '#e9ecef', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>No Image</div>;
-  };
-
+const RecipeCard = ({ recipe, averageRating }) => {
   return (
-    <>
-      <Card onClick={handleShowModal} style={{ cursor: "pointer", maxWidth: "350px", margin: "10px" }}>
-        <Card.Body>
-          <Card.Title>{recipe.title}</Card.Title>
-          <Card.Text>{recipe.username}</Card.Text>
-          {renderImage()}
-        </Card.Body>
-      </Card>
+    <Card
+      style={{
+        width: "18rem", 
+        height: "20rem", 
+        margin: "0.5rem",
+        borderRadius: "0.5rem",
+        overflow: "hidden",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <Card.Img
+        variant="top"
+        src={recipe.imageUrl || "default-image-url.jpg"}
+        style={{ height: "12rem", objectFit: "cover" }} // Adjusted height to match image height in the second image
+      />
+      <Card.Body style={{ padding: "1rem", flexGrow: 1 }}>
+        <Card.Title style={{ marginBottom: "0.5rem", fontSize: "1.1rem" }}>
+          {recipe.title}
+        </Card.Title>
+        {/* Render the username only if it's provided */}
+        {recipe.username && (
+          <Card.Text style={{ fontSize: "0.85rem", color: "gray" }}>
+            {recipe.username}
+          </Card.Text>
+        )}
 
-      <Modal show={showModal} onHide={handleCloseModal} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{recipe.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h5>Ingredients</h5>
-          <ListGroup>
-            {recipe.ingredients.map((ingredient, index) => (
-              <ListGroup.Item key={index}>{ingredient}</ListGroup.Item>
-            ))}
-          </ListGroup>
-          <h5 className="mt-3">Instructions</h5>
-          <p>{recipe.instructions.join(' ')}</p> {/* Assuming instructions is an array */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "0.5rem",
+          }}
+        >
+          <div></div>
+
+          {averageRating && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "0.9rem",
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faStar}
+                style={{ color: "yellow", marginRight: "0.25rem" }}
+              />
+              {averageRating.toFixed(1)}
+            </div>
+          )}
+        </div>
+        <Link
+          to={`/recipeDetails/${recipe._id}`}
+          style={{ textDecoration: "none" }}
+        >
+          <Button
+            variant="primary"
+            style={{ width: "100%", padding: "0.5rem 0", fontSize: "1rem" }}
+          >
+            View Recipe
           </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+        </Link>
+      </Card.Body>
+    </Card>
   );
 };
 

@@ -1,7 +1,5 @@
-// s3UploadMiddleware.js
-
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const crypto = require('crypto');
+const crypto = require("crypto");
 const multer = require("multer");
 
 // Configure multer for memory storage
@@ -20,10 +18,11 @@ const s3 = new S3Client({
   region: bucketRegion,
 });
 
-const generateRandomString = (bytes = 16) => crypto.randomBytes(bytes).toString('hex');
+const generateRandomString = (bytes = 16) =>
+  crypto.randomBytes(bytes).toString("hex");
 
 // Middleware for uploading files to S3
-const s3Upload = upload.single('image');
+const s3Upload = upload.single("image");
 
 const s3UploadMiddleware = async (req, res, next) => {
   s3Upload(req, res, async (err) => {
@@ -31,7 +30,8 @@ const s3UploadMiddleware = async (req, res, next) => {
       return res.status(500).json({ error: err.message });
     }
     if (req.file) {
-      const uniqueFileName = generateRandomString() + "-" + req.file.originalname;
+      const uniqueFileName =
+        generateRandomString() + "-" + req.file.originalname;
       const uploadParams = {
         Bucket: bucketName,
         Key: uniqueFileName,
@@ -41,7 +41,9 @@ const s3UploadMiddleware = async (req, res, next) => {
 
       try {
         await s3.send(new PutObjectCommand(uploadParams));
-        req.imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${encodeURIComponent(uniqueFileName)}`;
+        req.imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${encodeURIComponent(
+          uniqueFileName
+        )}`;
         next();
       } catch (uploadError) {
         return res.status(500).json({ error: uploadError.message });
