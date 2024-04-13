@@ -1,34 +1,33 @@
+
+
 POST http://localhost:8080/user/signup
 Content-Type: application/json 
 
 {
-    "username" : "tochiamanze",
-    "email" : "cdon@gmail.com",
+    "username" : "tochiamanzee",
+    "email" : "cdonn@gmail.com",
     "password" : "tochi12345"
 }
 
 ###
-
 POST http://localhost:8080/user/login
 Content-Type: application/json 
 
 {
-    "username" : "tochiamanze",
-    "password" : "tochi12345"
+    "username" : "xiiomaryy",
+    "password" : "Xiomary331!"
 }
 
 ###
 GET http://localhost:8081/user/getAll
 
-
 ###
-POST http://localhost:8081/user/editUser
+PUT http://localhost:8081/editUser/65a2bf5123aa136f896c08d6
+
 Content-Type: application/json 
 
 {
-    "userId" : "635ab8dfc407faf9f73deaf2",
-    "username" : "Tochi Edit",
-    "password" : "dwwrwr"
+    "bio": "hey"
 }
 
 ###
@@ -82,7 +81,7 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:8081/recipe/recipeGetAll
+GET http://localhost:8081/recipe/getAll
 Content-Type: application/json
 
 {
@@ -93,22 +92,10 @@ Content-Type: application/json
 
 ###
 //get user by id
-GET http://localhost:8081/user/getUserById/65c6c232e44dab5f1004c318
+GET http://localhost:8081/user/getUserById/6604a16c42ab6c0cc27f47c2
+
 
 ###
-PUT http://localhost:8081/recipe/edit/65c6b72f975faa073a53244d
-
-Content-Type: application/json
-
-{
-  "title": "Sample Recipe Title",
-    "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
-    "instructions": ["Step 1", "Step 2", "Step 3"],
-    "imageUrl": "",
-    "cuisineType": "Spanish",
-}
-
-//rating a recipe
 POST http://localhost:8081/recipe/rateRecipe/65c6b812975faa073a532458
 
 ###
@@ -119,16 +106,88 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:8081/ratings/add/65c6b812975faa073a532458
+POST http://localhost:8081/ratings/add/65c6b7a9975faa073a532454
 Content-Type: application/json
 
 {
   "username": "xiomary33",
-  "score": 3
+  "score":5
 }
 
 ###
 //get all ratings
 GET http://localhost:8081/ratings/getAll
 
+###
+GET http://localhost:8081/ratings/average/65c6b7a9975faa073a532454
 
+
+
+
+###
+PUT http://localhost:8080/ratings/editRating
+Content-Type: application/json
+
+{
+  "recipeId": "65c6b7a9975faa073a532454",
+  "newRating": 5
+}
+
+
+
+###
+DELETE 
+
+###
+PUT http://localhost:8081/recipe/edit/660445118880b7515243204a
+Content-Type: application/json
+
+{
+    "title": "hi",
+    "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
+    "instructions": ["Step 1", "Step 2", "Step 3"],
+    "cuisineType": "Spanish"
+}
+
+###
+PUT http://localhost:8081/ratings/add/65deb071382394dc749d4f9c
+Content-Type: application/json
+
+{
+  "score": 5
+}
+
+
+
+###
+GET http://localhost:8081/recipe/owner/65a2bf5123aa136f896c08d6
+Content-Type: application/json
+
+{
+    
+}
+
+
+###
+
+POST http://localhost:8081/comment/addComment/65a2bf5123aa136f896c08d6
+Content-Type: application/json
+
+{
+    "content": "Your comment content here"
+}
+
+
+
+
+###
+GET http://localhost:8081/recipe/recipes/search
+Content-Type: application/json
+
+{
+    
+}
+
+
+###
+GET http://localhost:8081/user/getProfile/661ad7f3a35389d6d3c448b0
