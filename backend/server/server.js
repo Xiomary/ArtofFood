@@ -10,8 +10,14 @@ const loginRoute = require('./routes/users/userLogin');
 const getAllUsersRoute = require('./routes/users/userGetAllUsers');
 const registerRoute = require('./routes/users/userSignUp');
 const getUserByIdRoute = require('./routes/users/userGetUserById');
-const editUser = require('./routes/users/userEditUser');
+//edit user
+//edit user
+//dit user
+const editUserRoute = require('./routes/users/userEditUser');
 const deleteUser = require('./routes/users/userDeleteAll');
+
+//create profile
+const createProfileRoute = require('./routes/users/userProfile');
 
 //create comment
 const addCommentRoute = require('./routes/comments/commentCreateComment');
@@ -22,15 +28,19 @@ const editCommentRoute = require('./routes/comments/commentEditComment');
 const recipeCreateRoute = require('./routes/recipes/recipeCreate');
 const recipeDeleteRoute = require('./routes/recipes/recipeDelete');
 const recipeGetAllRoute = require('./routes/recipes/recipeGetAll');
-const recipeOwner = require('./routes/recipes/recipeOwner');
 const recipeGetByIdRoute = require('./routes/recipes/recipeGetRecipeById');
 const recipeUpdateRoute = require('./routes/recipes/recipeUpdate');
+//recipe search
+const recipeSearchRoute = require('./routes/recipes/recipeSearch');
 
 const ratingCreateRoute = require('./routes/ratings/ratingCreateRating');
 const ratingGetAllRoute = require('./routes/ratings/ratingsGetAll');
 const ratingAverageRoute = require('./routes/ratings/calculateAverageRating');
 const ratingEditRoute = require('./routes/ratings/ratingEditRating');
 const ratingCheckUserRating = require('./routes/ratings/ratingCheckUserRating');
+
+//fetch user profile
+const fetchUserProfile = require('./routes/users/userGetProfile');
 
 //file upload
 const fileUploadRoute = require('./routes/images/fileUpload');
@@ -51,8 +61,14 @@ app.use('/user', loginRoute);
 app.use('/user', registerRoute);
 app.use('/user', getAllUsersRoute);
 app.use('/user', getUserByIdRoute);
-app.use('/user', editUser);
+//edit user
+app.use('/user', editUserRoute);
 app.use('/user', deleteUser);
+app.use('/user',fetchUserProfile);
+//prfile
+app.use('/user', createProfileRoute);
+//reicpe search
+app.use('/recipe', recipeSearchRoute);
 
 // Comment routes
 app.use('/comment', addCommentRoute);
@@ -63,7 +79,6 @@ app.use('/recipe', recipeCreateRoute);
 app.use('/recipe', recipeDeleteRoute);
 app.use('/recipe', recipeGetAllRoute);
 app.use('/recipe', recipeGetByIdRoute);
-app.use('/recipe', recipeOwner);
 app.use('/recipe', recipeUpdateRoute);
 
 //file upload
