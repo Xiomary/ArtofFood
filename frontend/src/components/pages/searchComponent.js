@@ -1,59 +1,64 @@
-import React, { useState } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+// Import useState and useEffect hooks
+import React, { useState, useEffect } from 'react';
 
 const SearchComponent = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Debounce function
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(null, args);
-      }, delay);
-    };
+  // Function to handle search
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(`http://localhost:8081/recipe/recipes/search?query=${searchQuery}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch recipes');
+      }
+      const data = await response.json();
+      onSearch(data.recipes);
+    } catch (error) {
+      console.error('Error searching for recipes:', error);
+      // Handle error
+    }
   };
 
-  // Debounced version of the search function
-  const debouncedSearch = debounce(onSearch, 300);
+  // UseEffect hook to trigger search when searchQuery changes
+  useEffect(() => {
+    // Ensure searchQuery is not empty before triggering search
+    if (searchQuery.trim() !== '') {
+      handleSearch();
+    }
+  }, [searchQuery]); // Trigger effect whenever searchQuery changes
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    debouncedSearch(searchQuery);
-  };
 
-  // Styles
+
   const cardStyle = {
     marginBottom: '20px',
     maxWidth: '100%',
-    height: '400px', 
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: `url("/images/hero-banner-large.jpg")`, 
+    backgroundImage: `url("/images/hero-banner-large.jpg")`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    borderRadius: '15px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     padding: '20px',
     boxSizing: 'border-box',
     color: '#fff',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-    marginTop: '20px', 
-    marginLeft: '20px', 
-    marginRight: '20px', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    marginTop: '0px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   };
 
   const inputGroupStyle = {
-    width: '50%', // Set width as per your design
-    minWidth: '300px', // Minimum width of the input group
+    width: '50%', 
+    minWidth: '300px', 
   };
 
-  // Centering the input group within the form
+ 
   const formStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -62,28 +67,15 @@ const SearchComponent = ({ onSearch }) => {
 
   return (
     <div style={cardStyle}>
-      <Form onSubmit={handleSearch} style={formStyle}>
+      <Form onSubmit={(e) => {e.preventDefault(); handleSearch();}} style={formStyle}>
         <InputGroup style={inputGroupStyle}>
           <Form.Control
             type="text"
-            placeholder="Enter recipe name"
+            placeholder="Search by title, ingredients, or cuisine type"
             value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              debouncedSearch(e.target.value);
-            }}
-            style={{ 
-              color: '#fff',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              borderColor: 'transparent',
-              borderRadius: '0.25rem'
-            }}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button variant="primary" type="submit" style={{
-            backgroundColor: '#6f42c1',
-            borderColor: '#6f42c1',
-            boxShadow: 'none'
-          }}>
+          <Button variant="primary" type="submit">
             <FontAwesomeIcon icon={faSearch} />
             <span style={{ marginLeft: '10px' }}>Search</span>
           </Button>

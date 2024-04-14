@@ -30,14 +30,14 @@ const recipeDeleteRoute = require('./routes/recipes/recipeDelete');
 const recipeGetAllRoute = require('./routes/recipes/recipeGetAll');
 const recipeGetByIdRoute = require('./routes/recipes/recipeGetRecipeById');
 const recipeUpdateRoute = require('./routes/recipes/recipeUpdate');
-//recipe search
-const recipeSearchRoute = require('./routes/recipes/recipeSearch');
 
 const ratingCreateRoute = require('./routes/ratings/ratingCreateRating');
 const ratingGetAllRoute = require('./routes/ratings/ratingsGetAll');
 const ratingAverageRoute = require('./routes/ratings/calculateAverageRating');
 const ratingEditRoute = require('./routes/ratings/ratingEditRating');
 const ratingCheckUserRating = require('./routes/ratings/ratingCheckUserRating');
+//recipe search 
+const recipeSearchRoute = require('./routes/recipes/recipeSearch');
 
 //fetch user profile
 const fetchUserProfile = require('./routes/users/userGetProfile');
@@ -67,8 +67,9 @@ app.use('/user', deleteUser);
 app.use('/user',fetchUserProfile);
 //prfile
 app.use('/user', createProfileRoute);
-//reicpe search
+
 app.use('/recipe', recipeSearchRoute);
+
 
 // Comment routes
 app.use('/comment', addCommentRoute);
