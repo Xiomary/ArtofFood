@@ -5,7 +5,10 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import getUserInfo from '../../utilities/decodeJwt';
 
-const PRIMARY_COLOR = '#f0ad4e';
+const PRIMARY_COLOR = '#0056b3'; // Blue color for register button
+const SECONDARY_COLOR = '#f0f0f0'; // Light gray color for login button
+const TEXT_COLOR_BLACK = '#000'; // Black color for login button text
+const TEXT_COLOR_WHITE = '#fff'; // White color for register button text
 const INPUT_BORDER_COLOR = '#ced4da';
 const url = 'http://localhost:8081/user/login';
 
@@ -15,40 +18,54 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Adjusted the maxWidth for a bigger form and increased padding
-  const cardStyle = {
-    maxWidth: '500px', // Increased from 400px to 500px
-    margin: 'auto',
-    padding: '3rem', // Increased padding for a bigger look
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    position: 'relative',
-    top: '50%',
-    transform: 'translateY(-50%)',
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
   };
 
-  const backgroundImageUrl = '/images/geometric-background.jpeg';
+  const formContainerStyle = {
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '2rem',
+  };
 
   const inputStyle = {
     border: `1px solid ${INPUT_BORDER_COLOR}`,
-    borderRadius: '20px',
+    borderRadius: '0',
     marginBottom: '1rem',
+    padding: '0.5rem',
+    width: '100%',
   };
 
-  const buttonStyling = {
-    backgroundColor: PRIMARY_COLOR,
-    borderColor: PRIMARY_COLOR,
-    borderRadius: '20px',
-    color: 'white',
+  const loginButtonStyle = {
+    backgroundColor: SECONDARY_COLOR, // Light gray background
+    borderColor: SECONDARY_COLOR,
+    color: TEXT_COLOR_BLACK, // Black text
     fontWeight: 'bold',
-    padding: '0.5rem 1rem',
+    padding: '0.75rem 1rem', // Adjusted padding for taller height
     fontSize: '1rem',
     lineHeight: '1.5',
     transition: 'color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out',
     marginTop: '1rem',
-    display: 'block',
-    width: '100%',
+    width: '100%', // Make the button full width
+  };
+
+  const registerButtonStyle = {
+    backgroundColor: PRIMARY_COLOR, // Blue background
+    borderColor: PRIMARY_COLOR,
+    color: TEXT_COLOR_WHITE, // White text
+    fontWeight: 'bold',
+    padding: '0.75rem 1rem', // Adjusted padding for taller height
+    fontSize: '1rem',
+    lineHeight: '1.5',
+    transition: 'color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+    marginTop: '1rem',
+    width: '100%', // Make the button full width
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -67,19 +84,19 @@ const Login = () => {
       navigate('/homePage');
     }
   }, [user, navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data: res } = await axios.post(url, data);
       localStorage.setItem('accessToken', res.accessToken);
-      navigate('/homePage');
+      navigate('/recipeList');
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         setError(error.response.data.message);
       }
     }
   };
+  
 
   if (user) {
     navigate('/homePage');
@@ -87,37 +104,41 @@ const Login = () => {
   }
 
   return (
-    <div style={{ height: '100vh', background: `url(${backgroundImageUrl}) center / cover no-repeat` }}>
-      <Form style={cardStyle} onSubmit={handleSubmit}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Login</h2> {/* Added Login heading */}
-        <Form.Group controlId='formBasicEmail'>
-          <Form.Control
-            type='text'
-            name='username'
-            value={data.username}
-            onChange={handleChange}
-            placeholder='Enter username'
-            style={inputStyle}
-          />
-        </Form.Group>
-        <Form.Group controlId='formBasicPassword'>
-          <Form.Control
-            type='password'
-            name='password'
-            value={data.password}
-            onChange={handleChange}
-            placeholder='Password'
-            style={inputStyle}
-          />
-        </Form.Group>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-        <Button type='submit' style={buttonStyling}>
-          Log In
-        </Button>
-        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <Link to='/signup'>Don't have an account? Sign up</Link>
-        </div>
-      </Form>
+    <div style={containerStyle}>
+      <div style={formContainerStyle}>
+        <Form onSubmit={handleSubmit}>
+          <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Sign in to your account</h2>
+          <Form.Group controlId='formBasicEmail'>
+            <Form.Label style={{ color: TEXT_COLOR_BLACK }}>Username</Form.Label>
+            <Form.Control
+              type='text'
+              name='username'
+              value={data.username}
+              onChange={handleChange}
+              placeholder='Enter username'
+              style={inputStyle}
+            />
+          </Form.Group>
+          <Form.Group controlId='formBasicPassword'>
+            <Form.Label style={{ color: TEXT_COLOR_BLACK }}>Password</Form.Label>
+            <Form.Control
+              type='password'
+              name='password'
+              value={data.password}
+              onChange={handleChange}
+              placeholder='Password'
+              style={inputStyle}
+            />
+          </Form.Group>
+          {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+          <Button type='submit' style={loginButtonStyle}>
+            Login
+          </Button>
+          <Button type='button' style={registerButtonStyle} as={Link} to='/signup'>
+            Register
+          </Button>
+        </Form>
+      </div>
     </div>
   );
 };
