@@ -17,22 +17,26 @@ const newUserSchema = new mongoose.Schema(
       type: String,
       min: 8
     },
-    imageUrl:{
-      required: true,
-      type:String
+    imageUrl: {
+      required: false,
+      type: String
     },
     name: {
       type: String,
-      required: true,
+      required: false,
     },
     bio: {
       type: String,
-      required: true,
+      required: false,
     },
     date: {
       type: Date,
       default: Date.now,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    }
   },
   { collection: "users" }
 );
