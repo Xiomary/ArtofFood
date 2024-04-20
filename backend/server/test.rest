@@ -191,3 +191,14 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8081/user/getProfile/661ad7f3a35389d6d3c448b0
+
+@base_url = http://localhost:8081
+
+### Search for recipes by title ###
+GET {{base_url}}/recipe/recipes/search?title=Tomato Soup
+
+### Search for recipes by ingredients ###
+GET {{base_url}}/recipe/recipes/search?ingredients=Tomato
+### Search for recipes by 
+### Search for recipes by cuisine type ###
+GET {{base_url}}/recipe/recipes/search?cuisineType=American
