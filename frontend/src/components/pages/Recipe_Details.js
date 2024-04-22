@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import StarRating from "./StarRatings"; // Import the StarRating component
+import StarRating from "./StarRating"; // Import the StarRating component
 import getUserInfo from "../../utilities/decodeJwt";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
