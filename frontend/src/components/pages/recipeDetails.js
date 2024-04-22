@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-import ReactStars from "react-rating-stars-component";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import StarRating from "./StarRatings"; // Import the StarRating component
 import getUserInfo from "../../utilities/decodeJwt";
-import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import RecipeCommentForm from "./RecipeCommentForm";
@@ -38,12 +36,12 @@ const recipeBodyStyles = {
 const cardImageContainerStyles = {
   marginTop: "20px",
 };
+
 const cardImageStyles = {
   width: "250px",
   height: "auto",
   marginRight: "20px", 
 };
-
 
 const horizontalLineStyle = {
   borderTop: "1px solid #999",
@@ -58,9 +56,9 @@ const smallerTextStyles = {
 const buttonStyles = {
   display: 'flex',
   alignItems: 'center',
-  padding: '8px 16px', // Padding around the buttons
-  borderRadius: '4px', // Rounded corners
-  margin: '4px', // Margin between buttons
+  padding: '8px 16px',
+  borderRadius: '4px',
+  margin: '4px',
 };
 
 const RecipeDetails = () => {
@@ -102,9 +100,8 @@ const RecipeDetails = () => {
       }
     };
   
-
     fetchRecipeData();
-  }, [id, loggedInUser]);
+  }, [id, loggedInUser]); // Correctly added loggedInUser as a dependency
 
   const fetchUser = (userId) => {
     axios
@@ -135,7 +132,6 @@ const RecipeDetails = () => {
       }
     }
   };
-  
 
   const handleRating = async (newRating) => {
     if (recipe.userId === loggedInUser.id) {
@@ -254,3 +250,4 @@ const RecipeDetails = () => {
 };
 
 export default RecipeDetails;
+

@@ -7,10 +7,11 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const ProfileCreate = () => {
   const [name, setName] = useState("");
+  //set errro
+  const [error, setError] = useState("");
   const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [error, setError] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {

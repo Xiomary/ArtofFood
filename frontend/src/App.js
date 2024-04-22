@@ -12,7 +12,6 @@ import RecipeDetails from "./components/pages/RecipeDetails";
 import getUserInfo from "./utilities/decodeJwt";
 import SearchComponent from "./components/pages/SearchComponent";
 import StarRating from "./components/pages/StarRatings";
-import UserRecipes from "./components/pages/UserRecipes";
 import RecipeEditForm from "./components/pages/RecipeEditForm";
 import RecipeCommentForm from "./components/pages/RecipeCommentForm";
 import ProfileCreate from "./components/pages/ProfileCreate";
