@@ -95,8 +95,7 @@ app.use('/recipe', recipeGetAllRoute);
 app.use('/recipe', recipeGetByIdRoute);
 app.use('/recipe', recipeUpdateRoute);
 
-//file upload
-app.use('/file', fileUploadRoute);
+
 
 app.use('/ratings', ratingAverageRoute);
 app.use('/ratings', ratingCreateRoute);
@@ -104,6 +103,7 @@ app.use('/ratings', ratingGetAllRoute);
 app.use('/ratings', ratingEditRoute);
 app.use('/ratings', ratingCheckUserRating);
 
+app.use('/file', fileUploadRoute);
 
 
 app.listen(SERVER_PORT, () => {
