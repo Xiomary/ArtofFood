@@ -30,7 +30,7 @@ const App = () => {
     setUser(userData);
     setIsAdmin(userData?.isAdmin || false); 
   }, []);
-
+  
   return (
     <>
       <Navbar />
