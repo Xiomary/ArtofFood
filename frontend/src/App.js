@@ -10,7 +10,8 @@ import RecipeList from "./components/pages/RecipeList";
 import RecipeDetails from "./components/pages/RecipeDetails";
 import getUserInfo from "./utilities/decodeJwt";
 import SearchComponent from "./components/pages/SearchComponent";
-import StarRating from "./components/pages/StarRatings";
+
+import StarRating from "./components/pages/StarRating";
 import RecipeEditForm from "./components/pages/RecipeEditForm";
 import RecipeCommentForm from "./components/pages/RecipeCommentForm";
 import ProfileCreate from "./components/pages/ProfileCreate";
