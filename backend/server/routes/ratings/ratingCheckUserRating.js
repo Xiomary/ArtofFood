@@ -1,10 +1,10 @@
 const express = require("express");
-const router = express.Router(); // Create a new router instance
+const router = express.Router(); 
 const Rating = require("../../models/ratingModel");
 
 router.get('/checkUserRating/:recipeId', async (req, res) => {
     const { recipeId } = req.params;
-    const { userId } = req.query; // Assuming you pass userId as a query parameter
+    const { userId } = req.query; 
   
     try {
       const userRating = await Rating.findOne({ userId: userId, recipeId: recipeId });

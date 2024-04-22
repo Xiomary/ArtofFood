@@ -4,31 +4,25 @@ const Recipe = require('../../models/recipeModel');
 
 router.get('/recipes/search', async (req, res) => {
   try {
-    const { title, ingredients, cuisineType } = req.query;
+    const { query } = req.query;
+    const searchQuery = {};
 
-
-    const query = {};
-
-    if (title) {
-      query.title = { $regex: title, $options: 'i' }; // Case-insensitive search for recipe title
+    if (query) {
+     
+      searchQuery.$or = [
+        { title: { $regex: query, $options: 'i' } },        // Search in title
+        { ingredients: { $regex: query, $options: 'i' } },  // Search in ingredients
+        { cuisineType: { $regex: query, $options: 'i' } }   // Search in cuisineType
+      ];
     }
 
-    if (ingredients) {
-      const ingredientsArray = ingredients.split(',').map(ingredient => ingredient.trim());
-      query.ingredients = { $all: ingredientsArray };
-    }
-
-    if (cuisineType) {
-      query.cuisineType = cuisineType; 
-    }
-
-    const recipes = await Recipe.find(query);
-
+    const recipes = await Recipe.find(searchQuery);
     res.json({ success: true, recipes });
   } catch (err) {
     console.error('Error searching for recipes:', err);
     res.status(500).json({ success: false, message: 'Failed to search for recipes' });
   }
 });
+
 
 module.exports = router;
