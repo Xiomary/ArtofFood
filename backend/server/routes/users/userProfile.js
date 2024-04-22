@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const newUserModel = require('../../models/userModel');
-const s3UploadMiddleware = require('../../routes/images/fileUpload'); 
+const s3UploadMiddleware = require('../../routes/images/fileUpload');
 
 router.post('/profile', s3UploadMiddleware, async (req, res) => {
   const { userId, name, bio } = req.body;

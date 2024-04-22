@@ -4,6 +4,8 @@ const router = express.Router();
 
 const newUserModel = require('../../models/userModel');
 const s3UploadMiddleware = require('../../routes/images/fileUpload'); 
+
+
 router.put('/profileUpdate/:userId', s3UploadMiddleware, async (req, res) => {
   const userId = req.params.userId;
   const { name, bio } = req.body;

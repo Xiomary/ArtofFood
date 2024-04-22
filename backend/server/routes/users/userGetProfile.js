@@ -8,7 +8,7 @@ router.get('/getProfile/:userId', async (req, res) => {
     try {
       const { userId } = req.params;
   
-      // Check if userId is undefined or empty
+      // Check if userId is undefined or empty   
       if (!userId) {
         return res.status(400).json({ message: "User ID is required." });
       }
