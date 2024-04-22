@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const Comment = require("./commentModel"); // Import the comment model
+const Comment = require("./commentModel");
 
 
-// Define the recipe schema
 const recipeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -24,14 +23,14 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  // Add a user reference to associate the recipe with a user
   userId: {
-    type : mongoose.Schema.Types.ObjectId, ref: 'users',
+    type: mongoose.Schema.Types.ObjectId, ref: 'User',
     required: true,
-    label: 'userId',
   },
-  comments: [Comment.schema], 
-
+  labels: { 
+    type: [String],
+    required: false, 
+  },
 });
 
 // Create a model from the recipe schema
