@@ -14,9 +14,9 @@ router.post('/profile', s3UploadMiddleware, async (req, res) => {
     }
 
     // Update user properties if provided
-    user.name = name || user.name; // Only update if provided
-    user.bio = bio || user.bio; // Only update if provided
-    user.imageUrl = imageUrl; // Save image URL
+    user.name = name || user.name; 
+    user.bio = bio || user.bio;
+    user.imageUrl = imageUrl; 
 
     await user.save();
 
