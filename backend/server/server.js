@@ -14,10 +14,12 @@ const getUserByIdRoute = require('./routes/users/userGetUserById');
 //edit user
 //dit user
 const editUserRoute = require('./routes/users/userEditUser');
-const deleteUser = require('./routes/users/userDeleteAll');
+const deleteAll = require('./routes/users/userDeleteAll');
 
 //create profile
 const createProfileRoute = require('./routes/users/userProfile');
+//get profile
+const getProfileRoute = require('./routes/users/userGetProfile');
 
 //create comment
 const addCommentRoute = require('./routes/comments/commentCreateComment');
@@ -36,11 +38,15 @@ const ratingGetAllRoute = require('./routes/ratings/ratingsGetAll');
 const ratingAverageRoute = require('./routes/ratings/calculateAverageRating');
 const ratingEditRoute = require('./routes/ratings/ratingEditRating');
 const ratingCheckUserRating = require('./routes/ratings/ratingCheckUserRating');
+//profile update
+const editProfileRoute = require('./routes/users/userProfileUpdate');
 //recipe search 
 const recipeSearchRoute = require('./routes/recipes/recipeSearch');
 
 //fetch user profile
 const fetchUserProfile = require('./routes/users/userGetProfile');
+//user delete
+const deleteUser = require('./routes/users/userDeleteAll');
 
 //file upload
 const fileUploadRoute = require('./routes/images/fileUpload');
@@ -61,14 +67,21 @@ app.use('/user', loginRoute);
 app.use('/user', registerRoute);
 app.use('/user', getAllUsersRoute);
 app.use('/user', getUserByIdRoute);
+app.use('/user', getProfileRoute);
+//delete user
+app.use('/user', deleteUser);
 //edit user
 app.use('/user', editUserRoute);
-app.use('/user', deleteUser);
+
 app.use('/user',fetchUserProfile);
 //prfile
 app.use('/user', createProfileRoute);
 
 app.use('/recipe', recipeSearchRoute);
+//get profile
+//profile update
+app.use('/user', editProfileRoute);
+
 
 
 // Comment routes
