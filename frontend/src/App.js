@@ -18,7 +18,6 @@ import RecipeCommentForm from "./components/pages/RecipeCommentForm";
 import ProfileCreate from "./components/pages/ProfileCreate";
 import ProfileDetailsPage from "./components/pages/ProfileDetailspage";
 import ProfileUpdate from "./components/pages/ProfileUpdate";
-//admin delete
 import AdminDelete from "./components/pages/AdminDeleteUsers";
 
 const App = () => {
