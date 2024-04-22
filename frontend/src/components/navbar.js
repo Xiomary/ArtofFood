@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faHome, faSearch, faPlusSquare, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of navigate
 
-export default function Navbar() {
+export default function AppNavbar() {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -71,7 +71,7 @@ export default function Navbar() {
                 Home
               </Nav.Link>
               <Nav.Link href="/recipeList" style={{ color: 'white' }}>
-
+                
                Search
               </Nav.Link>
             </Nav>
