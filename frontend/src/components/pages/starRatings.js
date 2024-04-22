@@ -9,6 +9,8 @@ const StarRating = ({ newRating, disabled }) => {
             size={20}
             activeColor="#ffd700"
             edit={!disabled} 
+
+            
         />
     );
 };
