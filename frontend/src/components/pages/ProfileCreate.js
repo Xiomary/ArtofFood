@@ -54,7 +54,7 @@ const ProfileCreate = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8081/user/profile`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profile`,  formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

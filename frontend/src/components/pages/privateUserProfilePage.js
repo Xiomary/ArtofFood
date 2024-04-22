@@ -1,119 +1,141 @@
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import getUserInfo from "../../utilities/decodeJwt";
+import Container from "react-bootstrap/Container";
+import { Button } from "react-bootstrap";
 
-const PrivateUserProfile = () => {
-  const [show, setShow] = useState(false);
-  const [user, setUser] = useState({});
+const PrivateUserProfilePage = () => {
+  const [userProfile, setUserProfile] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [oldEmail, setOldEmail] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [comfirmEmail, setComfirmedEmail] = useState("");
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const navigate = useNavigate();
-
-  // Handle logout button click
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add logic to handle password change request
-    console.log("Old password:", oldPassword);
-    console.log("New password:", newPassword);
-    console.log("Confirm password:", confirmPassword);
-  };
-
-  // Fetch user information on component mount
   useEffect(() => {
-    setUser(getUserInfo());
+    const userInfo = getUserInfo();
+    if (userInfo) {
+      setLoggedInUser(userInfo);
+      console.log("Logged in user:", userInfo);
+      fetchProfile(userInfo.id);
+    } else {
+      console.log("No user info found.");
+    }
   }, []);
 
-  // Render login prompt if user is not authenticated
-  if (!user)
-    return (
-      <div>
-        <h4>Log in to view this page.</h4>
-      </div>
-    );
+  const fetchProfile = async (userId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userId}`);
+      console.log("Profile data from server:", response.data);
+      if (response.data && response.data.user) {
+        setUserProfile(response.data.user);
+        console.log("Profile data fetched:", response.data.user);
+      } else {
+        throw new Error("No profile data received");
+      }
+    } catch (error) {
+      setError("Failed to fetch profile. Please try again later.");
+      console.error("Error fetching profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const navigateToProfileDetails = () => {
+    // Logic to navigate to profile details
+  };
+  const styles = {
+    outerContainer: {
+      position: "relative",
+      height: "100vh",
+      backgroundColor: "#f4f5f8",
+    },
+    topBar: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      padding: "10px 20px",
+      backgroundColor: "#ffffff",
+      borderBottom: "1px solid #dcdcdc",
+      display: "flex",
+      justifyContent: "flex-start", // Changed to "flex-start"
+      alignItems: "center",
+    },
+    profileImage: {
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      objectFit: "cover",
+      marginRight: "10px",
+      cursor: "pointer",
+    },
+    viewProfileLink: {
+      color: "#000",
+      textDecoration: "none",
+      fontSize: "16px",
+      fontWeight: "bold",
+    },
+    createButton: {
+      backgroundColor: "#3880ff",
+      color: "#ffffff",
+      border: "none",
+      borderRadius: "4px",
+      padding: "10px 15px",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "500",
+      outline: "none",
+      width: "100%",
+      boxSizing: "border-box",
+    },
+  };
+  
+  console.log("User profile state:", userProfile); // Debugging output
   return (
-    <div className="container">
-      <div className="col-md-12 text-center">
-        <h1>{user && user.username}</h1>
-        <div className="d-flex flex-column align-items-center">
-          <Button style={{ marginBottom: "10px" }} onClick={handleLogout}>
-            Log Out
-          </Button>
-
-          <Button style={{ marginBottom: "10px" }} onClick={handleShow}>
-            Change Password
-          </Button>
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : userProfile && userProfile.name && userProfile.bio && userProfile.imageUrl ? (
+        <div style={styles.outerContainer}>
+          <div style={styles.topBar}>
+            {userProfile && (
+              <>
+                <img
+                  src={userProfile.imageUrl}
+                  alt={`${userProfile.name}'s profile`}
+                  style={styles.profileImage}
+                  onClick={navigateToProfileDetails}
+                />
+                <Link to={`/profileUpdate/${userProfile.userId}`} style={styles.viewProfileLink}>
+                  View/edit my profile
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Change Password</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="oldPassword">
-                <Form.Label>Old Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group controlId="newPassword">
-                <Form.Label>New Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group controlId="confirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Button variant="primary" type="submit">
-                Change Password
+      ) : (
+        <Container className="d-flex justify-content-center align-items-center" style={{ height: "calc(100vh - 50px)" }}>
+          <div className="text-center">
+            <div className="mb-4">
+              <i className="bi bi-person-circle" style={{ fontSize: "8rem" }}></i>
+            </div>
+            <div className="mb-4">
+              <p>You haven't set up a profile.</p>
+              <p>Creating a profile allows you to set up a name, a bio, and upload an image.</p>
+            </div>
+            <Link to={`/profileCreate`}>
+              <Button style={styles.createButton} variant="primary">
+                + Create Profile
               </Button>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+            </Link>
+          </div>
+        </Container>
+      )}
     </div>
   );
 };
 
-export default PrivateUserProfile;
+export default PrivateUserProfilePage;
+

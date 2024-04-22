@@ -1,16 +1,24 @@
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-// Import useState and useEffect hooks
 import React, { useState, useEffect } from 'react';
 
 const SearchComponent = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Function to handle search
+  // Function to debounce the search
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
   const handleSearch = async () => {
+    if (!searchQuery.trim()) return; // Ensure we do not search with empty or whitespace-only queries
     try {
-      const response = await fetch(`http://localhost:8081/recipe/recipes/search?query=${searchQuery}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/recipes/search?query=${encodeURIComponent(searchQuery)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch recipes');
       }
@@ -18,19 +26,13 @@ const SearchComponent = ({ onSearch }) => {
       onSearch(data.recipes);
     } catch (error) {
       console.error('Error searching for recipes:', error);
-      // Handle error
     }
   };
 
-  // UseEffect hook to trigger search when searchQuery changes
   useEffect(() => {
-    // Ensure searchQuery is not empty before triggering search
-    if (searchQuery.trim() !== '') {
-      handleSearch();
-    }
-  }, [searchQuery]); // Trigger effect whenever searchQuery changes
-
-
+    const delayedSearch = debounce(handleSearch, 500); // Debounce for 500 milliseconds
+    delayedSearch();
+  }, [searchQuery]);
 
   const cardStyle = {
     marginBottom: '20px',
@@ -54,11 +56,10 @@ const SearchComponent = ({ onSearch }) => {
   };
 
   const inputGroupStyle = {
-    width: '50%', 
-    minWidth: '300px', 
+    width: '50%',
+    minWidth: '300px',
   };
 
- 
   const formStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -67,7 +68,7 @@ const SearchComponent = ({ onSearch }) => {
 
   return (
     <div style={cardStyle}>
-      <Form onSubmit={(e) => {e.preventDefault(); handleSearch();}} style={formStyle}>
+      <Form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} style={formStyle}>
         <InputGroup style={inputGroupStyle}>
           <Form.Control
             type="text"

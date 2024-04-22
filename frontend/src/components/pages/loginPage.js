@@ -5,12 +5,12 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import getUserInfo from '../../utilities/decodeJwt';
 
-const PRIMARY_COLOR = '#0056b3'; // Blue color for register button
-const SECONDARY_COLOR = '#f0f0f0'; // Light gray color for login button
-const TEXT_COLOR_BLACK = '#000'; // Black color for login button text
-const TEXT_COLOR_WHITE = '#fff'; // White color for register button text
+const PRIMARY_COLOR = '#0056b3'; 
+const SECONDARY_COLOR = '#f0f0f0'; 
+const TEXT_COLOR_BLACK = '#000';
+const TEXT_COLOR_WHITE = '#fff'; 
 const INPUT_BORDER_COLOR = '#ced4da';
-const url = 'http://localhost:8081/user/login';
+const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/login`;
 
 const Login = () => {
   const [user, setUser] = useState(null);
@@ -43,29 +43,29 @@ const Login = () => {
   };
 
   const loginButtonStyle = {
-    backgroundColor: SECONDARY_COLOR, // Light gray background
+    backgroundColor: SECONDARY_COLOR,
     borderColor: SECONDARY_COLOR,
-    color: TEXT_COLOR_BLACK, // Black text
+    color: TEXT_COLOR_BLACK,
     fontWeight: 'bold',
-    padding: '0.75rem 1rem', // Adjusted padding for taller height
+    padding: '0.75rem 1rem',
     fontSize: '1rem',
     lineHeight: '1.5',
     transition: 'color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out',
     marginTop: '1rem',
-    width: '100%', // Make the button full width
+    width: '100%', 
   };
 
   const registerButtonStyle = {
-    backgroundColor: PRIMARY_COLOR, // Blue background
+    backgroundColor: PRIMARY_COLOR, 
     borderColor: PRIMARY_COLOR,
-    color: TEXT_COLOR_WHITE, // White text
+    color: TEXT_COLOR_WHITE, 
     fontWeight: 'bold',
-    padding: '0.75rem 1rem', // Adjusted padding for taller height
+    padding: '0.75rem 1rem', 
     fontSize: '1rem',
     lineHeight: '1.5',
     transition: 'color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out',
     marginTop: '1rem',
-    width: '100%', // Make the button full width
+    width: '100%',
   };
 
   const handleChange = ({ currentTarget: input }) => {

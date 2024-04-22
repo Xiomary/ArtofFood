@@ -1,58 +1,104 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import getUserInfo from '../../utilities/decodeJwt';
-import './homePage.css';
 
 const HomePage = () => {
-  // State variables
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Handle click event for logout button
-  const handleClick = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('accessToken');
-    return navigate('/');
-  };
-
-  // Fetch user info on component mount
   useEffect(() => {
-    setUser(getUserInfo());
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      setUser(getUserInfo(token));
+    }
   }, []);
 
-  // If user is not logged in, display a message
-  if (!user) {
-    return <div><h4>Log in to view this page.</h4></div>;
-  }
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('accessToken');
+    setUser(null);
+    navigate('/');
+  };
 
-  // Extract user information
-  const { id, email, username, password, favline, favroute } = user;
+  const handleLogin = () => {
+    navigate('/loginPage');
+  };
 
-  // Render the component
+  const handleCreateAccount = () => {
+    navigate('/signUp');
+  };
+
+  // Custom styles for the buttons
+  const buttonStyles = {
+    padding: '10px 20px',
+    fontSize: '16px',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '10px',
+    boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#0275d8', 
+  };
+
   return (
-    <>
-      <img src="/trainhome.png" alt="Train" className="center-image" />
-      <div className="my-container">
-        <h3>
-          Welcome
-          <span className="username"> @{username}</span>
-        </h3>
-        <h3>
-          Your registered email is
-          <span className="email"> {email}</span>
-        </h3>
-        <h3>
-          Your password is
-          <span className="password"> ( hashed )</span>
-        </h3>
-        <h3>
-          Your favorite line is
-          <span className="favline"> {favline}</span>
-        </h3>
-        {/* Logout button */}
-        <button onClick={handleClick}>Logout</button>
+    <div
+      className="my-container"
+      style={{
+        backgroundImage: "url('/images/homepage.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1,
+        }}
+      />
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2, 
+          color: 'white', 
+          textAlign: 'center',
+          padding: '2rem',
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+        }}
+      >
+        <h1>All of your recipes in one place</h1>
+        <p>A free recipe keeper, where you can search, rate, and comment on recipes.</p>
+        {user ? (
+          <>
+            <h3>Welcome <span className="username">@{user.username}</span></h3>
+            <h3>Your registered email is <span className="email">{user.email}</span></h3>
+            <button style={buttonStyles} onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <div> 
+              <button style={buttonStyles} onClick={handleCreateAccount}>Create an Account</button>
+            </div>
+            <div> 
+              <button style={buttonStyles} onClick={handleLogin}>Log In</button>
+            </div>
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

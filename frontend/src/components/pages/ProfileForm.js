@@ -3,12 +3,12 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import getUserInfo from "../../utilities/decodeJwt";
-//import profile edit form
+
 
 const ProfileForm = () => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState(null); // Define the state for the logged-in user
+  const [loggedInUser, setLoggedInUser] = useState(null); 
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -31,7 +31,7 @@ const ProfileForm = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8081/user/profile`, formData);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profile`, formData);
       alert("Profile updated successfully!");
       console.log(response.data);
     } catch (error) {
