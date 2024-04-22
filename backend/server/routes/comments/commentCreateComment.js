@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Comment = require("../../models/commentModel"); // Make sure the path is correct
 
-// POST /comment/addComment/:id (where :id is the recipeId)
 router.post("/addComment/:id", async (req, res) => {
   const { content } = req.body; 
   const { userId } = req.body; 

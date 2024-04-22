@@ -33,7 +33,7 @@ const s3UploadMiddleware = async (req, res, next) => {
       const uniqueFileName =
         generateRandomString() + "-" + req.file.originalname;
       const uploadParams = {
-        Bucket: bucketName,
+        Bucket: bucketName, 
         Key: uniqueFileName,
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
