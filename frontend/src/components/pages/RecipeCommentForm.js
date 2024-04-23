@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import "./addCommentPage2.css";
 import getUserInfo from "../../utilities/decodeJwt";
 
 const RecipeCommentForm = () => {
+
   const { id } = useParams();
   const [comment, setComment] = useState("");
   const [loggedInUser, setLoggedInUser] = useState(null);
