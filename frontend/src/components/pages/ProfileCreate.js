@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import getUserInfo from "../../utilities/decodeJwt";
 import { Container, Row, Col } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const ProfileCreate = () => {
   const [name, setName] = useState("");
@@ -14,6 +14,7 @@ const ProfileCreate = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -72,7 +73,7 @@ const ProfileCreate = () => {
         }
       );
       
-     
+      navigate(`/profileDetails/${loggedInUser.id}`); // Navigate to ProfileDetailsPage
     } catch (error) {
       console.error("Error creating profile:", error);
       setError(error.response?.data?.message || "Failed to create profile.");
@@ -222,7 +223,7 @@ const ProfileCreate = () => {
                   borderRadius: "4px",
                   width: "100%",
                   fontSize: "14px",
-                  marginTop: "20px", // Add spacing below the image
+                  marginTop: "20px", 
                 }}
               >
                 Save
