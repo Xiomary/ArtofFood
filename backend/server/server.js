@@ -51,7 +51,7 @@ const deleteUser = require('./routes/users/userDeleteAll');
 //file upload
 const fileUploadRoute = require('./routes/images/fileUpload');
 
-const commentGetCommentById = require('./routes/comments/commentGetById');
+
 
 const commentGetAllComments = require('./routes/comments/commentGetAllComments');
 
@@ -93,7 +93,7 @@ app.use('/user', editProfileRoute);
 app.use('/comment', addCommentRoute);
 app.use('/comment', getAllCommentsRoute);
 app.use('/comment', editCommentRoute);
-app.use('/comment', commentGetCommentById);
+
 //delete comment
 app.use('/comment', deleteCommentById);
 
