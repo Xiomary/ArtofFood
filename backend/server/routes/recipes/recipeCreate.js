@@ -4,9 +4,8 @@ const Recipe = require("../../models/recipeModel");
 const s3UploadMiddleware = require('../../routes/images/fileUpload');
 
 router.post("/add", s3UploadMiddleware, async (req, res) => {
-  // Now req.imageUrl contains the S3 image URL if an image was uploaded
   const { title, ingredients, instructions, cuisineType, userId } = req.body;
-  let imageUrl = req.imageUrl || ""; // Use the imageUrl from the middleware, if available
+  let imageUrl = req.imageUrl || ""; 
 
   try {
     const recipeData = { title, ingredients, instructions, cuisineType, userId, imageUrl };

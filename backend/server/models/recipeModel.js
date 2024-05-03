@@ -17,7 +17,6 @@ const recipeSchema = new mongoose.Schema({
   cuisineType: {
     type: String,
     required: true,
-    enum: ['Italian', 'Mexican', 'Indian', 'Chinese', 'American', 'French'], // Specify the allowed cuisine types
   },
   imageUrl: {
     type: String,
@@ -26,10 +25,6 @@ const recipeSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId, ref: 'User',
     required: true,
-  },
-  labels: { 
-    type: [String],
-    required: false, 
   },
 });
 
