@@ -10,7 +10,9 @@ const RecipeList = () => {
   // Function to fetch recipes
   const fetchRecipes = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/getAll`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/getAll`
+      );
       setRecipes(res.data);
       fetchAverageRatings(res.data);
     } catch (err) {
@@ -22,7 +24,9 @@ const RecipeList = () => {
   const fetchAverageRatings = async (recipesData) => {
     try {
       const ratingsPromises = recipesData.map((recipe) =>
-      axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/average/${recipe._id}`)
+        axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/average/${recipe._id}`
+        )
       );
       const ratingsResponses = await Promise.all(ratingsPromises);
       const averageRatingsData = ratingsResponses.reduce((acc, res, index) => {

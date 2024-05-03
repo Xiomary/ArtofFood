@@ -4,9 +4,8 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-// Constants for styles
-const PRIMARY_COLOR = '#0056b3'; // Blue color
-const TEXT_COLOR_WHITE = '#fff'; // White color
+const PRIMARY_COLOR = '#0056b3'; 
+const TEXT_COLOR_WHITE = '#fff'; 
 const INPUT_BORDER_COLOR = '#ced4da';
 
 const Register = () => {
@@ -14,7 +13,6 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Styling for the registration form
   const containerStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -31,6 +29,7 @@ const Register = () => {
     padding: '2rem',
     width: '400px', 
   };
+  
 
   const inputStyle = {
     border: `1px solid ${INPUT_BORDER_COLOR}`,

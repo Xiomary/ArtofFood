@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Comment = require("../../models/commentModel"); // Make sure the path is correct
+const Comment = require("../../models/commentModel"); 
 
 router.post("/addComment/:id", async (req, res) => {
   const { content } = req.body; 

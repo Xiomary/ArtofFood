@@ -24,7 +24,9 @@ const PrivateUserProfilePage = () => {
 
   const fetchProfile = async (userId) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userId}`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userId}`
+      );
       console.log("Profile data from server:", response.data);
       if (response.data && response.data.user) {
         setUserProfile(response.data.user);
@@ -89,7 +91,7 @@ const PrivateUserProfilePage = () => {
       boxSizing: "border-box",
     },
   };
-  
+
   console.log("User profile state:", userProfile); // Debugging output
   return (
     <div>
@@ -97,7 +99,10 @@ const PrivateUserProfilePage = () => {
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
-      ) : userProfile && userProfile.name && userProfile.bio && userProfile.imageUrl ? (
+      ) : userProfile &&
+        userProfile.name &&
+        userProfile.bio &&
+        userProfile.imageUrl ? (
         <div style={styles.outerContainer}>
           <div style={styles.topBar}>
             {userProfile && (
@@ -108,7 +113,10 @@ const PrivateUserProfilePage = () => {
                   style={styles.profileImage}
                   onClick={navigateToProfileDetails}
                 />
-                <Link to={`/profileUpdate/${userProfile.userId}`} style={styles.viewProfileLink}>
+                <Link
+                  to={`/profileUpdate/${userProfile.userId}`}
+                  style={styles.viewProfileLink}
+                >
                   View/edit my profile
                 </Link>
               </>
@@ -116,17 +124,29 @@ const PrivateUserProfilePage = () => {
           </div>
         </div>
       ) : (
-        <Container className="d-flex justify-content-center align-items-center" style={{ height: "calc(100vh - 50px)" }}>
+        <Container
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "calc(100vh - 50px)" }}
+        >
           <div className="text-center">
             <div className="mb-4">
-              <i className="bi bi-person-circle" style={{ fontSize: "8rem" }}></i>
+              <i
+                className="bi bi-person-circle"
+                style={{ fontSize: "8rem" }}
+              ></i>
             </div>
             <div className="mb-4">
               <p>You haven't set up a profile.</p>
-              <p>Creating a profile allows you to set up a name, a bio, and upload an image.</p>
+              <p>
+                Creating a profile allows you to set up a name, a bio, and
+                upload an image.
+              </p>
             </div>
             <Link to={`/profileCreate`}>
-              <Button style={styles.createButton} variant="primary">
+              <Button
+                style={{ ...styles.createButton, backgroundColor: "#00A8FF" }}
+                variant="primary"
+              >
                 + Create Profile
               </Button>
             </Link>
@@ -138,4 +158,3 @@ const PrivateUserProfilePage = () => {
 };
 
 export default PrivateUserProfilePage;
-

@@ -189,6 +189,20 @@ Content-Type: application/json
 }
 
 
+
+###
+GET http://localhost:8081/comment/getAll
+Content-Type: application/json
+
+{
+    
+}
+
+###
+DELETE http://localhost:8081/comment/comments/delete/662eb779e500469bbf03b2cb
+
+
+
 ###
 GET http://localhost:8081/user/getProfile/661ad7f3a35389d6d3c448b0
 

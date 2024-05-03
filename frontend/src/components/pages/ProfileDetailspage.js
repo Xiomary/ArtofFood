@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const ProfileDetailsPage = () => {
+const ProfileDetails = () => {
   const { userId } = useParams();
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
@@ -31,7 +31,16 @@ const ProfileDetailsPage = () => {
 
   return (
     <div
-      style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        marginBottom: "20px",
+        width: "100%", 
+        padding: "20px", 
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        borderRadius: "8px", 
+        backgroundColor: "#fff", 
+      }}
     >
       <div
         style={{
@@ -39,6 +48,7 @@ const ProfileDetailsPage = () => {
           height: "200px",
           borderRadius: "50%",
           overflow: "hidden",
+          marginRight: "20px",
         }}
       >
         <img
@@ -51,14 +61,14 @@ const ProfileDetailsPage = () => {
           }}
         />
       </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
+      <div>
+        <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem", color: "#333" }}>
           {profile?.name} 
         </h1>
-        <p style={{ fontSize: "1rem" }}>{profile?.bio}</p>{" "}
+        <p style={{ fontSize: "1rem", color: "#666" }}>{profile?.bio}</p>
       </div>
     </div>
   );
 };
 
-export default ProfileDetailsPage;
+export default ProfileDetails;

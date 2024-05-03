@@ -1,110 +1,80 @@
 import React, { useEffect, useState } from 'react';
-import getUserInfo from '../utilities/decodeJwt';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faHome, faSearch, faPlusSquare, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of navigate
+import { faPlusSquare, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import getUserInfo from '../utilities/decodeJwt';
+import axios from 'axios';
 
 export default function AppNavbar() {
   const [user, setUser] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = getUserInfo();
-    setUser(userInfo);
-    console.log(userInfo);
+    const fetchUserInfo = async () => {
+      const userInfo = getUserInfo();
+      setUser(userInfo);
+      if (userInfo) {
+        fetchProfileImage(userInfo);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const fetchProfileImage = async (userInfo) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userInfo.id}`);
+      if (response.status === 200) {
+        setProfileImageUrl(response.data.user.imageUrl);
+      }
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+    }
   };
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const handleLogout = () => {
     localStorage.removeItem('accessToken');
     setUser(null);
-    setIsOpen(false); // Reset isOpen state to false
-    navigate('/'); // Use navigate method from useNavigate hook
-  };
-  
-  const menuIconStyle = {
-    cursor: 'pointer',
-    color: 'white',
-    fontSize: '20px' // Reduced font size for the hamburger menu icon
-  };
-  
-
-  const sidebarStyle = {
-    position: 'fixed',
-    top: '56px', // Set top to the height of the navbar
-    left: 0,
-    width: '250px',
-    height: 'calc(100% - 56px)', // Adjust the height to account for the navbar
-    background: 'white',
-    transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-    transition: 'transform 0.3s ease-in-out',
-    zIndex: 1100,
-    overflowY: 'auto'
-  };
-  
-  const sidebarItemStyle = {
-    color: 'black',
-    padding: '15px 25px',
-    display: 'flex',
-    alignItems: 'center',
-    borderBottom: '1px solid #ccc',
-    textDecoration: 'none'
+    setProfileImageUrl(null);
+    navigate('/');
   };
 
   return (
-    <>
-      <Navbar expand="lg" variant="dark" bg="dark" sticky="top">
-        <Container fluid>
-          <FontAwesomeIcon icon={faBars} onClick={toggleSidebar} style={menuIconStyle} />
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mx-auto">
-              <Nav.Link href="/homePage" style={{ color: 'white' }}>
-                Home
-              </Nav.Link>
-              <Nav.Link href="/recipeList" style={{ color: 'white' }}>
-                
-               Search
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+    <Navbar expand="lg" variant="dark" bg="dark" sticky="top">
+      <Container fluid>
+        <Navbar.Brand href="/homePage">
+         
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mx-auto">
+            <Nav.Link href="/homePage" style={{ color: 'white' }}>Home</Nav.Link>
+            <Nav.Link href="/recipeList" style={{ color: 'white' }}>Search</Nav.Link>
+          </Nav>
+          {user && (
+            <Dropdown alignRight>
+              <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: 'transparent', border: 'none' }}>
+                {profileImageUrl && <img src={profileImageUrl} alt="Profile" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />}
+                <span style={{ color: 'white', marginLeft: '10px' }}>{user.username}</span>
+              </Dropdown.Toggle>
 
-      <div style={sidebarStyle}>
-        <Nav className="flex-column">
-          {user ? (
-            <>
-              <Nav.Link href="/recipeForm" style={sidebarItemStyle}>
-                <FontAwesomeIcon icon={faPlusSquare} style={{ marginRight: '10px' }} /> Create Recipe
-              </Nav.Link>
-              <Nav.Link href="/privateUserProfile" style={sidebarItemStyle}>
-                <FontAwesomeIcon icon={faUser} style={{ marginRight: '10px' }} /> View Profile
-              </Nav.Link>
-              <Nav.Link onClick={handleLogout} style={sidebarItemStyle}>
-                <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '10px' }} /> Logout
-              </Nav.Link>
-            </>
-          ) : (
-            <>
-              <Nav.Link href="/signUp" style={sidebarItemStyle}>
-                Register
-              </Nav.Link>
-              <Nav.Link href="/loginPage" style={sidebarItemStyle}>
-                Login
-              </Nav.Link>
-            </>
+              <Dropdown.Menu>
+                <Dropdown.Item href="/recipeForm">
+                  <FontAwesomeIcon icon={faPlusSquare} style={{ marginRight: '10px' }} /> Create Recipe
+                </Dropdown.Item>
+                <Dropdown.Item href="/privateUserProfile">
+                  <FontAwesomeIcon icon={faUser} style={{ marginRight: '10px' }} /> View Profile
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '10px' }} /> Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           )}
-        </Nav>
-      </div>
-    </>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }

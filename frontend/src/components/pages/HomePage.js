@@ -41,6 +41,14 @@ const HomePage = () => {
     backgroundColor: '#0275d8', 
   };
 
+  // Custom styles for the cursive text
+  const cursiveTextStyle = {
+    fontFamily: 'cursive',
+    marginBottom:"70px",
+    fontSize: '50px', // Increased font size to 36px
+    marginBottom: '10px',
+  };
+
   return (
     <div
       className="my-container"
@@ -79,8 +87,9 @@ const HomePage = () => {
           alignItems: 'center', 
         }}
       >
+        <div style={cursiveTextStyle}>Art of Food</div>
         <h1>All of your recipes in one place</h1>
-        <p>A free recipe keeper, where you can search, rate, and comment on recipes.</p>
+        <p>A recipe keeper, where you can search, rate, and comment on recipes.</p>
         {user ? (
           <>
             <h3>Welcome <span className="username">@{user.username}</span></h3>

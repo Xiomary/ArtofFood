@@ -51,6 +51,13 @@ const deleteUser = require('./routes/users/userDeleteAll');
 //file upload
 const fileUploadRoute = require('./routes/images/fileUpload');
 
+const commentGetCommentById = require('./routes/comments/commentGetById');
+
+const commentGetAllComments = require('./routes/comments/commentGetAllComments');
+
+const deleteCommentById = require('./routes/comments/commentDeleteById');
+
+
 
 //rating check user rating
 
@@ -88,6 +95,9 @@ app.use('/user', editProfileRoute);
 app.use('/comment', addCommentRoute);
 app.use('/comment', getAllCommentsRoute);
 app.use('/comment', editCommentRoute);
+app.use('/comment', commentGetCommentById);
+//delete comment
+app.use('/comment', deleteCommentById);
 
 app.use('/recipe', recipeCreateRoute);
 app.use('/recipe', recipeDeleteRoute);
@@ -102,6 +112,10 @@ app.use('/ratings', ratingCreateRoute);
 app.use('/ratings', ratingGetAllRoute);
 app.use('/ratings', ratingEditRoute);
 app.use('/ratings', ratingCheckUserRating);
+
+
+
+app.use('/comment', commentGetAllComments);
 
 app.use('/file', fileUploadRoute);
 

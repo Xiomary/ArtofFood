@@ -1,65 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import StarRating from "./StarRating"; // Import the StarRating component
+import StarRating from "./StarRating";
 import getUserInfo from "../../utilities/decodeJwt";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import RecipeCommentForm from "./RecipeCommentForm";
-
-const recipeContainerStyles = {
-  display: "flex",
-  flexDirection: "column",
-  background: "#fff",
-};
-
-const recipeHeaderStyles = {
-  display: "flex",
-  justifyContent: "flex-start",
-  alignItems: "center",
-  padding: "20px",
-  borderBottom: "1px solid #ddd",
-};
-
-const recipeMetaStyles = {
-  display: "flex",
-  flexDirection: "column",
-  padding: "20px",
-};
-
-const recipeBodyStyles = {
-  padding: "20px",
-  display: "flex",
-  flexDirection: "column",
-};
-
-const cardImageContainerStyles = {
-  marginTop: "20px",
-};
-
-const cardImageStyles = {
-  width: "250px",
-  height: "auto",
-  marginRight: "20px", 
-};
-
-const horizontalLineStyle = {
-  borderTop: "1px solid #999",
-  margin: 0,
-  width: "100%",
-};
-
-const smallerTextStyles = {
-  fontSize: "14px", 
-};
-
-const buttonStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  padding: '8px 16px',
-  borderRadius: '4px',
-  margin: '4px',
-};
 
 const RecipeDetails = () => {
   const [recipe, setRecipe] = useState(null);
@@ -70,6 +16,7 @@ const RecipeDetails = () => {
   const [error, setError] = useState("");
   const [hasAlreadyRated, setHasAlreadyRated] = useState(false);
   const [isRecipeOwner, setIsRecipeOwner] = useState(false);
+  const [showAllIngredients, setShowAllIngredients] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -99,9 +46,9 @@ const RecipeDetails = () => {
         setLoadingRecipe(false);
       }
     };
-  
+
     fetchRecipeData();
-  }, [id, loggedInUser]); // Correctly added loggedInUser as a dependency
+  }, [id, loggedInUser]);
 
   const fetchUser = (userId) => {
     axios
@@ -120,12 +67,9 @@ const RecipeDetails = () => {
   const checkUserRating = async (recipeOwnerId) => {
     if (loggedInUser && loggedInUser.id !== recipeOwnerId) {
       try {
-        const ratingCheckResponse = await axios.get(
-          `${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/checkUserRating/${id}`,
-          {
-            params: { userId: loggedInUser.id },
-          }
-        );
+        const ratingCheckResponse = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/checkUserRating/${id}`, {
+          params: { userId: loggedInUser.id },
+        });
         setHasAlreadyRated(ratingCheckResponse.data.hasRated);
       } catch (error) {
         console.error("Error checking user rating:", error);
@@ -140,17 +84,14 @@ const RecipeDetails = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/add/${id}`,{
+      await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URI}/ratings/add/${id}`, {
         userId: loggedInUser.id,
         score: newRating,
       });
-      alert("Rating submitted successfully!");
       setHasAlreadyRated(true);
+      setError("Rating added successfully.");
     } catch (error) {
-      console.error(
-        "Error submitting rating:",
-        error.response?.data || "Failed to submit rating."
-      );
+      console.error("Error submitting rating:", error.response?.data || "Failed to submit rating.");
       setError(error.response?.data || "Failed to submit rating.");
     }
   };
@@ -158,7 +99,7 @@ const RecipeDetails = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/delete/${id}`);
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error deleting recipe:", error);
       setError("Failed to delete recipe.");
@@ -166,88 +107,90 @@ const RecipeDetails = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px" }}>
       {loadingRecipe || loadingUser ? (
-        <div className="text-danger">Loading...</div>
+        <div style={{ color: "red" }}>Loading...</div>
       ) : error ? (
-        <div className="text-danger">{error}</div>
+        <div style={{ color: "red" }}>{error}</div>
       ) : !recipe ? (
-        <div className="text-danger">Recipe not found.</div>
+        <div style={{ color: "red" }}>Recipe not found.</div>
       ) : (
-        <div className="row">
-          <div className="col-md-8 mb-3" style={recipeContainerStyles}>
-            <div style={recipeHeaderStyles}>
-              <div style={cardImageContainerStyles}>
-                <img
-                  src={recipe.imageUrl}
-                  alt={recipe.title}
-                  style={cardImageStyles}
-                />
+        <div className="recipe-card" style={{ maxWidth: "800px", width: "100%", background: "#f5f5f5", padding: "20px", borderRadius: "8px", boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", marginBottom: "20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <div style={{ width: "70%" }}>
+              <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>{recipe.title}</h2>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+                <strong>Created by:</strong>&nbsp;{user ? user.username : "Unknown User"}
               </div>
-              <h2>{recipe.title}</h2>
             </div>
-            <div style={recipeMetaStyles}>
-              <p style={smallerTextStyles}>
-                <strong>Ingredients:</strong> {recipe.ingredients.join(", ")}
-              </p>
-              <p style={smallerTextStyles}>
-                <strong>Instructions:</strong> {recipe.instructions}
-              </p>
-              <p style={smallerTextStyles}>
-                <strong>Cuisine Type:</strong> {recipe.cuisineType}
-              </p>
-            </div>
-            {!loggedInUser && (
-              <div style={recipeBodyStyles}>
-                <p>Sign in to rate, comment, and edit.</p>
+            <div style={{ width: "30%", textAlign: "right" }}>
+              <div style={{ display: "inline-block", background: getRandomColor(), color: "black", borderRadius: "15px", padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}>
+                {recipe.cuisineType}
               </div>
+            </div>
+          </div>
+          <div style={{ width: "100%", height: "300px", overflow: "hidden", marginBottom: "20px" }}>
+            <img src={recipe.imageUrl} alt={recipe.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Ingredients:</h3>
+            <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
+              {showAllIngredients ? recipe.ingredients.map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>) : recipe.ingredients.slice(0, 5).map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>)}
+            </div>
+            {recipe.ingredients.length > 5 && (
+              <button onClick={() => setShowAllIngredients(!showAllIngredients)} style={{ fontSize: "14px", marginTop: "10px", border: "none", background: "none", color: "#007bff", cursor: "pointer" }}>
+                {showAllIngredients ? "Show less" : "Show more"}
+              </button>
             )}
-            {loggedInUser && loggedInUser.id !== recipe.userId && (
-              <div style={recipeBodyStyles}>
-                <StarRating
-                  newRating={handleRating}
-                  disabled={hasAlreadyRated}
-                />
-                {hasAlreadyRated && (
-                  <p className="text-secondary">
-                    You have already rated this recipe.
-                  </p>
-                )}
-                <RecipeCommentForm />
-              </div>
+          </div>
+          <div>
+            <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Instructions:</h3>
+            <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
+              {recipe.instructions.map((instruction, index) => <p key={index}>{index + 1}. {instruction}</p>)}
+            </div>
+          </div>
+          {loggedInUser && !isRecipeOwner && (
+            <div style={{ marginTop: "20px" }}>
+              {hasAlreadyRated ? (
+                <p>You have already rated this recipe.</p>
+              ) : (
+                <>
+                  <strong>Rate this recipe:</strong>
+                  <StarRating newRating={handleRating}/>
+                </>
+              )}
+            </div>
+          )}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+            {loggedInUser && isRecipeOwner && (
+              <>
+                <Link to={`/recipeEdit/${recipe._id}`} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none", marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faEdit} style={{ color: "#00A8FF", marginRight: "4px" }} />
+                  EDIT
+                </Link>
+                <button onClick={handleDelete} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none" }}>
+                  <FontAwesomeIcon icon={faTrash} style={{ color: "#00A8FF", marginRight: "4px" }} />
+                  DELETE
+                </button>
+              </>
             )}
           </div>
         </div>
       )}
 
-      <hr style={{ ...horizontalLineStyle }} />
-      <div className="row justify-content-start">
-        <div className="col-md-8 mb-3">
-          {loggedInUser && isRecipeOwner && (
-            <div>
-              <div style={{ ...buttonStyles }}>
-                <Link
-                  to={`/recipeEdit/${recipe._id}`}
-                  className="btn btn-primary btn-sm mr-2"
-                >
-                  <FontAwesomeIcon icon={faEdit} style={{ marginRight: '4px' }} />
-                  Edit
-                </Link>
-                <button onClick={handleDelete} className="btn btn-primary btn-sm">
-                  <FontAwesomeIcon icon={faTrash} style={{ marginRight: '4px' }} />
-                  Delete
-                </button>
-              </div>
-              <h4 style={{ marginLeft: "auto", marginTop: "10px", ...smallerTextStyles }}>
-                Created by: {user ? user.username : "Unknown User"}
-              </h4>
-            </div>
-          )}
+      {loggedInUser && !hasAlreadyRated && (
+        <div style={{ width: "100%", maxWidth: "800px" }}>
+          <RecipeCommentForm recipeId={id} loggedInUser={loggedInUser} />
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default RecipeDetails;
+// Function to generate random background color
+const getRandomColor = () => {
+  const colors = ['#FFC6C2', '#FFDDC0', '#D8FFC2', '#C2DFFF', '#F4C430', '#E6B333', '#FFE0FB'];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
 
+export default RecipeDetails;

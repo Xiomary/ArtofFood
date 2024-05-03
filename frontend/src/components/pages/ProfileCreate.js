@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
@@ -7,12 +7,12 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const ProfileCreate = () => {
   const [name, setName] = useState("");
-  //set errro
   const [error, setError] = useState("");
   const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -20,7 +20,7 @@ const ProfileCreate = () => {
       setLoggedInUser(userInfo);
       console.log("Decoded UserInfo:", userInfo);
     } else {
-      setError('User not authenticated.');
+      setError("User not authenticated.");
     }
   }, []);
 
@@ -35,9 +35,15 @@ const ProfileCreate = () => {
   };
 
   const handleUploadClick = () => {
-    document.getElementById("imageInput").click();
+    fileInputRef.current.click();
   };
 
+  const handleRemoveImage = () => {
+    setImage(null);
+    setImagePreview(null);
+    fileInputRef.current.value = "";
+  };
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -47,37 +53,146 @@ const ProfileCreate = () => {
     }
 
     const formData = new FormData();
-    formData.append('userId', loggedInUser.id);
-    formData.append('name', name);
-    formData.append('bio', bio);
+    formData.append("userId", loggedInUser.id);
+    formData.append("name", name);
+    formData.append("bio", bio);
     if (image) {
-      formData.append('image', image);
+      formData.append("image", image);
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profile`,  formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profile`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       alert("Profile updated successfully!");
       console.log("Profile updated:", response.data);
     } catch (error) {
       console.error("Error creating profile:", error);
-      setError(error.response?.data?.message || 'Failed to create profile.');
+      setError(error.response?.data?.message || "Failed to create profile.");
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Container>
         <Row className="justify-content-md-center">
           <Col md={8}>
-            <h1 style={{ fontSize: '2rem' }}>Welcome to your profile!</h1>
-            <p style={{ fontSize: '1rem' }}>Before you get started, there are a few things that you'll need to set up.</p>
+            <h1 style={{ fontSize: "2rem" }}>Welcome to your profile!</h1>
+            <p style={{ fontSize: "1rem" }}>
+              Before you get started, there are a few things that you'll need
+              to set up.
+            </p>
             <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formBasicImage">
+                <Form.Label>Upload an image for your profile:</Form.Label>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "200px", 
+                    height: "200px", 
+                    margin: "0 auto",
+                  }}
+                >
+                  <input
+                    ref={fileInputRef}
+                    id="imageInput"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleImageChange}
+                  />
+                  {imagePreview ? (
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "200px",
+                        height: "200px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                      }}
+                      onClick={handleUploadClick}
+                    >
+                      <img
+                        src={imagePreview}
+                        alt="Profile Preview"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <div
+                        onClick={handleRemoveImage}
+                        style={{
+                          position: "absolute",
+                          top: "5px",
+                          right: "5px",
+                          borderRadius: "50%",
+                          width: "24px",
+                          height: "24px",
+                          backgroundColor: "#FF0000",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          border: "2px solid white",
+                          color: "white",
+                        }}
+                      >
+                        &minus;
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={handleUploadClick}
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f8f9fa",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                        cursor: "pointer",
+                        color: "black",
+                        position: "relative",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "40px",
+                          color: "#333",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        +
+                      </div>
+                      Click to Add Image
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
               <Form.Group controlId="formBasicName">
-                <Form.Label>First, choose the name or nickname to be shown on your profile.</Form.Label>
+                <Form.Label>
+                  First, choose the name or nickname to be shown on your
+                  profile.
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Name/Nickname"
@@ -95,42 +210,20 @@ const ProfileCreate = () => {
                   onChange={(e) => setBio(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="formBasicImage">
-                <Form.Label>Upload an image for your profile:</Form.Label>
-                <div style={{ position: 'relative', width: '100px', height: '100px', margin: '0 auto' }}>
-                  <input
-                    id="imageInput"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleImageChange}
-                  />
-                  <Button
-                    variant="light"
-                    type="button"
-                    className="rounded-circle border"
-                    style={{ width: '100px', height: '100px', padding: '0', position: 'absolute', top: '0', left: '0', color: 'black' }}
-                    onClick={handleUploadClick}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Profile"
-                        className="rounded-circle"
-                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <>
-                        <span style={{ fontSize: '24px', fontWeight: 'bold' }}>+</span>
-                        <div>Upload Image</div>
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </Form.Group>
-              <Button variant="primary" type="submit" size="lg" className="mt-4" style={{ width: '100%' }}>
+              <Button
+                variant="primary"
+                type="submit"
+                style={{
+                  padding: "8px 20px",
+                  backgroundColor: "#00A8FF",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  width: "100%",
+                  fontSize: "14px",
+                  marginTop: "20px", // Add spacing below the image
+                }}
+              >
                 Save
               </Button>
             </Form>

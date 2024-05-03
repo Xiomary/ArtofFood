@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Image, Card } from "react-bootstrap"; 
+import React, { useState, useEffect, useRef } from "react";
+import { Image, Card } from "react-bootstrap";
 import getUserInfo from "../../utilities/decodeJwt";
 
 const RecipeForm = () => {
@@ -8,11 +8,12 @@ const RecipeForm = () => {
   const [ingredients, setIngredients] = useState("");
   const [cuisineType, setCuisineType] = useState("");
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); 
+  const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -45,10 +46,13 @@ const RecipeForm = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/add`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/add`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       setIsLoading(false);
       if (response.ok) {
@@ -58,7 +62,7 @@ const RecipeForm = () => {
         setIngredients("");
         setCuisineType("");
         setImage(null);
-        setImagePreview(null); 
+        setImagePreview(null);
       } else {
         setError("Failed to add recipe. Please try again later.");
       }
@@ -71,7 +75,6 @@ const RecipeForm = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-    // Create a preview of the uploaded image
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
@@ -79,8 +82,14 @@ const RecipeForm = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleRemoveImage = (e) => {
+    e.stopPropagation(); 
+    setImage(null);
+    setImagePreview(null);
+  };
+
   const handleUploadClick = () => {
-    document.getElementById("recipeImage").click();
+    fileInputRef.current.click();
   };
 
   return (
@@ -89,7 +98,7 @@ const RecipeForm = () => {
         maxWidth: "700px",
         margin: "auto",
         paddingBottom: "40px",
-        fontFamily: "Georgia, Times, serif",
+        fontFamily: "Roboto,Helvetica Neue, sans-serif",
       }}
     >
       {error && (
@@ -101,7 +110,7 @@ const RecipeForm = () => {
             borderRadius: "4px",
             backgroundColor: "#f8f9fa",
             color: "#6c757d",
-            fontFamily: "Georgia, Times, serif",
+            fontFamily: "Roboto,Helvetica Neue, sans-serif",
           }}
         >
           {error}
@@ -109,13 +118,16 @@ const RecipeForm = () => {
       )}
       <form
         onSubmit={handleSubmit}
-        style={{ marginTop: "20px", fontFamily: "Georgia, Times, serif" }}
+        style={{
+          marginTop: "20px",
+          fontFamily: "Roboto,Helvetica Neue, sans-serif",
+        }}
       >
         <div
           style={{
             marginBottom: "50px",
             textAlign: "center",
-            fontFamily: "Georgia, Times, serif",
+            fontFamily: "Roboto,Helvetica Neue, sans-serif",
           }}
           onClick={handleUploadClick}
         >
@@ -128,15 +140,21 @@ const RecipeForm = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontFamily: "Georgia, Times, serif",
+              fontFamily: "Roboto,Helvetica Neue, sans-serif",
               margin: "auto",
               border: "3px solid white",
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-              transition: "background-color 0.3s", 
+              boxShadow: "0 0 8px rgba(0, 0, 0, 0.3)",
+              transition: "background-color 0.3s",
               position: "relative",
             }}
-            onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = "#f8f9fa";}}
-            onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = "white";}}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f8f9fa";
+              e.currentTarget.style.opacity = "0.9"; 
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.opacity = "1"; 
+            }}
           >
             {imagePreview ? (
               <Card.Img
@@ -152,17 +170,17 @@ const RecipeForm = () => {
             ) : (
               <div
                 style={{
-                  position: "absolute", 
-                  top: "50%", 
-                  left: "50%", 
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
                   transform: "translate(-50%, -50%)",
                   textAlign: "center",
                 }}
               >
                 <div
                   style={{
-                    fontSize: "24px", 
-                    fontFamily: "Georgia, Times, serif",
+                    fontSize: "24px",
+                    fontFamily: "Roboto,Helvetica Neue, sans-serif",
                     color: "black",
                     marginBottom: "5px",
                   }}
@@ -171,7 +189,7 @@ const RecipeForm = () => {
                 </div>
                 <div
                   style={{
-                    fontFamily: "Georgia, Times, serif",
+                    fontFamily: "Roboto,Helvetica Neue, sans-serif",
                     fontSize: "14px",
                     color: "black",
                     whiteSpace: "nowrap",
@@ -181,9 +199,32 @@ const RecipeForm = () => {
                 </div>
               </div>
             )}
+            {imagePreview && (
+              <div
+                onClick={handleRemoveImage}
+                style={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  borderRadius: "50%",
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "#FF0000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "2px solid white",
+                  color: "white",
+                }}
+              >
+                &minus;
+              </div>
+            )}
           </Card>
 
           <input
+            ref={fileInputRef}
             id="recipeImage"
             type="file"
             onChange={handleFileChange}
@@ -199,8 +240,8 @@ const RecipeForm = () => {
             style={{
               marginBottom: "5px",
               display: "block",
-              fontFamily: "Georgia, Times, serif",
-              fontSize: "9px",
+              fontFamily: "Roboto,Helvetica Neue, sans-serif",
+              fontSize: "12px",
               color: "black",
             }}
           >
@@ -211,11 +252,11 @@ const RecipeForm = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             style={{
-              fontFamily: "Georgia, Times, serif",
+              fontFamily: "Roboto,Helvetica Neue, sans-serif",
               border: "none",
               borderBottom: "1px solid #ccc",
               padding: "5px 0",
-              width: "100%", 
+              width: "100%",
               outline: "none",
               fontSize: "9px",
               color: "black",
@@ -224,13 +265,16 @@ const RecipeForm = () => {
         </div>
 
         <div
-          style={{ marginBottom: "20px", fontFamily: "Georgia, Times, serif" }}
+          style={{
+            marginBottom: "20px",
+            fontFamily: "Roboto,Helvetica Neue, sans-serif",
+          }}
         >
           <label
             style={{
               marginBottom: "5px",
               display: "block",
-              fontSize: "9px",
+              fontSize: "12px",
               color: "black",
             }}
           >
@@ -244,7 +288,7 @@ const RecipeForm = () => {
               border: "none",
               borderBottom: "1px solid #ccc",
               padding: "5px 0",
-              width: "100%", 
+              width: "100%",
               resize: "none",
               outline: "none",
               fontSize: "9px",
@@ -254,43 +298,49 @@ const RecipeForm = () => {
         </div>
 
         <div
-          style={{ marginBottom: "20px", fontFamily: "Georgia, Times, serif" }}
+          style={{
+            marginBottom: "20px",
+            fontFamily: "Roboto,Helvetica Neue, sans-serif",
+          }}
         >
           <label
             style={{
               marginBottom: "5px",
               display: "block",
-              fontSize: "9px",
+              fontSize: "12px",
               color: "black",
             }}
           >
             Instructions
           </label>
           <textarea
-            rows={3} 
+            rows={3}
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
             style={{
               border: "none",
               borderBottom: "1px solid #ccc",
               padding: "5px 0",
-              width: "100%", 
+              width: "100%",
               resize: "none",
               outline: "none",
               fontSize: "9px",
-              color:"black",
+              color: "black",
             }}
           />
         </div>
 
         <div
-          style={{ marginBottom: "20px", fontFamily: "Georgia, Times, serif" }}
+          style={{
+            marginBottom: "20px",
+            fontFamily: "Roboto,Helvetica Neue, sans-serif",
+          }}
         >
           <label
             style={{
               marginBottom: "5px",
               display: "block",
-              fontSize: "9px",
+              fontSize: "12px",
               color: "black",
             }}
           >
@@ -304,10 +354,10 @@ const RecipeForm = () => {
               border: "none",
               borderBottom: "1px solid #ccc",
               padding: "5px 0",
-              width: "100%", 
+              width: "100%",
               outline: "none",
               fontSize: "9px",
-              color: "black",
+              color: "",
             }}
           />
         </div>
@@ -317,7 +367,7 @@ const RecipeForm = () => {
           disabled={isLoading}
           style={{
             padding: "8px 20px",
-            backgroundColor: "#007bff",
+            backgroundColor: "#00A8FF",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
@@ -325,7 +375,7 @@ const RecipeForm = () => {
             fontSize: "14px",
           }}
         >
-          {isLoading ? "Submitting..." : "Create"}
+          {isLoading ? "Submitting..." : "CREATE"}
         </button>
       </form>
 

@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../../models/recipeModel'); 
+const Recipe = require('../../models/recipeModel');
 
 router.get('/recipes/search', async (req, res) => {
+  
   try {
     const { query } = req.query;
     const searchQuery = {};
 
-    if (query) {
-     
+    if (query && query.trim()) {
       searchQuery.$or = [
         { title: { $regex: query, $options: 'i' } },        // Search in title
         { ingredients: { $regex: query, $options: 'i' } },  // Search in ingredients
@@ -23,6 +23,5 @@ router.get('/recipes/search', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to search for recipes' });
   }
 });
-
 
 module.exports = router;

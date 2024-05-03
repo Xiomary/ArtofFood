@@ -1,92 +1,44 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom"; // Import Link component
+import { useParams, Link } from "react-router-dom";
+import { FaPencilAlt } from "react-icons/fa";
+import Button from "react-bootstrap/Button"; // Assuming you are using Bootstrap for Button component
 
 const ProfileUpdate = () => {
   const { userId } = useParams();
+  const [editingName, setEditingName] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
   const [editedName, setEditedName] = useState("");
   const [editedBio, setEditedBio] = useState("");
   const [error, setError] = useState("");
-  const [image, setImage] = useState(null); // State to hold the uploaded image file
-  const [oldImage, setOldImage] = useState(""); // State to hold the old image URL
-  const fileInputRef = useRef(null); // Reference to file input element
-
+  const [image, setImage] = useState(null);
+  const [oldImage, setOldImage] = useState("");
   const [userProfile, setUserProfile] = useState({
     userId: "",
     name: "",
     bio: "",
     imageUrl: "",
   });
-
-   // Inline styles for layout
-   const profileContainerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-    maxWidth: '400px',
-    margin: 'auto',
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '10px',
-    margin: '5px 0',
-    boxSizing: 'border-box',
-  };
-
-  const buttonStyle = {
-    width: '100%',
-    padding: '10px',
-    margin: '10px 0',
-    backgroundColor: '#007BFF',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  };
-
-  const imageContainerStyle = {
-    position: 'relative',
-    marginBottom: '10px',
-  };
-
-  const imageStyle = {
-    width: '200px',
-    height: '200px',
-    borderRadius: '100px', // makes the image round
-    objectFit: 'cover',
-    border: '3px solid white',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  };
-
-  const editButtonStyle = {
-    position: 'absolute',
-    bottom: '0',
-    right: '0',
-    padding: '5px 10px',
-    backgroundColor: '#28A745',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  };
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userId}`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/getProfile/${userId}`
+        );
         const userData = response.data.user;
         if (userData) {
           setUserProfile(userData);
           setEditedName(userData.name);
           setEditedBio(userData.bio);
-          setOldImage(userData.imageUrl); // Set the old image URL
-          console.log('User ID:', userData.userId);
+          setOldImage(userData.imageUrl);
         }
       } catch (err) {
-        setError("Failed to fetch user profile: " + (err.response?.data?.message || err.message));
+        setError(
+          "Failed to fetch user profile: " +
+            (err.response?.data?.message || err.message)
+        );
       }
     };
     fetchUserProfile();
@@ -95,14 +47,16 @@ const ProfileUpdate = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setImage(file);
-    setOldImage(URL.createObjectURL(file)); // Update the old image preview immediately
+    setOldImage(URL.createObjectURL(file));
   };
 
-  const handleEditImage = () => {
-    fileInputRef.current.click();
+  const handleRemoveImage = () => {
+    setImage(null);
+    setOldImage("");
+    fileInputRef.current.value = "";
   };
 
-  const handleUpdateProfile = async () => {
+  const handleSaveProfile = async () => {
     try {
       const formData = new FormData();
       formData.append("image", image);
@@ -110,13 +64,16 @@ const ProfileUpdate = () => {
       formData.append("bio", editedBio);
       formData.append("userId", userProfile.userId);
 
-      const response = await axios.put(`${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profileUpdate/${userId}`,formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/profileUpdate/${userId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setUserProfile(response.data.user);
-      console.log("Profile updated successfully");
     } catch (err) {
       console.error("Error updating profile:", err);
       setError("Failed to update profile.");
@@ -128,46 +85,171 @@ const ProfileUpdate = () => {
   }
 
   return (
-    <div style={profileContainerStyle}>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        ref={fileInputRef}
-        style={{ display: 'none' }} // Hide the input element visually
-      />
-
-      {oldImage && (
-        <div style={imageContainerStyle}>
-          <img
-            src={oldImage}
-            alt={`${userProfile.name}'s profile`}
-            style={imageStyle}
+    <div style={{ padding: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+        <div style={{ marginRight: "20px" }}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+            style={{ display: "none" }}
           />
-          <button onClick={handleEditImage} style={editButtonStyle}>Edit Image</button>
+          {oldImage ? (
+            <div
+              style={{
+                width: "200px",
+                height: "200px",
+                borderRadius: "50%",
+                overflow: "hidden",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <img
+                src={oldImage}
+                alt={`${userProfile.name}'s profile`}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+              <div
+                onClick={handleRemoveImage}
+                style={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  borderRadius: "50%",
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "#FF0000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "2px solid white",
+                  color: "white",
+                }}
+              >
+                &minus;
+              </div>
+            </div>
+          ) : (
+            <div
+              onClick={() => fileInputRef.current.click()}
+              style={{
+                width: "200px",
+                height: "200px",
+                borderRadius: "50%",
+                backgroundColor: "#f8f9fa",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                cursor: "pointer",
+                color: "black",
+                position: "relative",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#333",
+                  marginBottom: "10px",
+                }}
+              >
+                +
+              </div>
+              Click to Add Image
+            </div>
+          )}
         </div>
-      )}
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            {editingName ? (
+              <>
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  onBlur={() => setEditingName(false)}
+                  autoFocus
+                  style={{ borderBottom: "1px solid black", marginRight: "10px", padding: "8px 0" }}
+                />
+              </>
+            ) : (
+              <>
+                <div
+                  style={{ marginRight: "10px", borderBottom: editingName ? "1px solid black" : "none" }}
+                >
+                  {userProfile.name}
+                </div>
+                <FaPencilAlt
+                  style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
+                  onClick={() => setEditingName(true)}
+                />
+              </>
+            )}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+            {editingBio ? (
+              <>
+                <textarea
+                  value={editedBio}
+                  onChange={(e) => setEditedBio(e.target.value)}
+                  onBlur={() => setEditingBio(false)}
+                  autoFocus
+                  style={{ width: "100%", borderBottom: "1px solid black", padding: "8px", marginRight: "10px", height: "80px" }}
+                />
+              </>
+            ) : (
+              <>
+                <p style={{ marginBottom: "0", flex: "1" }}>{userProfile.bio}</p>
+                <FaPencilAlt
+                  style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
+                  onClick={() => setEditingBio(true)}
+                />
+              </>
+            )}
+          </div>
+          <Link
+            to={`/profileDetails/${userId}`}
+            style={{
+              padding: "5px 10px",
+              backgroundColor: "#00A8FF",
+              color: "#fff",
+              borderRadius: "4px",
+              fontSize: "15px",
+              textDecoration: "none",
+            }}
+          >
+            View Profile
+          </Link>
+        </div>
+      </div>
 
-      <input
-        type="text"
-        value={editedName}
-        onChange={(e) => setEditedName(e.target.value)}
-        style={inputStyle}
-      />
-      <input
-        type="text"
-        value={editedBio}
-        onChange={(e) => setEditedBio(e.target.value)}
-        style={inputStyle}
-      />
-
-      <button onClick={handleUpdateProfile} style={buttonStyle}>
-        Update Profile
-      </button>
-
-      <Link to={`/profileDetails/${userId}`} style={buttonStyle}>
-        View Profile
-      </Link>
+      <div style={{ position: "fixed", bottom: 20, left: 20, width: "calc(100% - 40px)", backgroundColor: "rgba(255, 255, 255, 0.9)", padding: "20px", zIndex: 999 }}>
+        <div style={{ width: "100%" }}>
+          <Button
+            variant="primary"
+            type="submit"
+            style={{
+              padding: "8px 20px",
+              backgroundColor: "#00A8FF",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              width: "100%",
+              fontSize: "14px",
+            }}
+            onClick={handleSaveProfile}
+          >
+            SAVE
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

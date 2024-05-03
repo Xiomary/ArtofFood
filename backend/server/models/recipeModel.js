@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Comment = require("./commentModel");
 
-
 const recipeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -18,6 +17,7 @@ const recipeSchema = new mongoose.Schema({
   cuisineType: {
     type: String,
     required: true,
+    enum: ['Italian', 'Mexican', 'Indian', 'Chinese', 'American', 'French'], // Specify the allowed cuisine types
   },
   imageUrl: {
     type: String,
