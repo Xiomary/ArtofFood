@@ -89,7 +89,6 @@ const RecipeDetails = () => {
         score: newRating,
       });
       setHasAlreadyRated(true);
-      setError("Rating added successfully.");
     } catch (error) {
       console.error("Error submitting rating:", error.response?.data || "Failed to submit rating.");
       setError(error.response?.data || "Failed to submit rating.");
@@ -99,7 +98,7 @@ const RecipeDetails = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`${process.env.REACT_APP_BACKEND_SERVER_URI}/recipe/delete/${id}`);
-      navigate("/");
+      navigate("/recipeList");
     } catch (error) {
       console.error("Error deleting recipe:", error);
       setError("Failed to delete recipe.");
@@ -124,7 +123,8 @@ const RecipeDetails = () => {
               </div>
             </div>
             <div style={{ width: "30%", textAlign: "right" }}>
-              <div style={{ display: "inline-block", background: getRandomColor(), color: "black", borderRadius: "15px", padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}>
+              <div style={{ display: "inline-block", background: getRandomColor(), color: "#black", borderRadius: "15px", padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}>
+              
                 {recipe.cuisineType}
               </div>
             </div>
@@ -149,16 +149,10 @@ const RecipeDetails = () => {
               {recipe.instructions.map((instruction, index) => <p key={index}>{index + 1}. {instruction}</p>)}
             </div>
           </div>
-          {loggedInUser && !isRecipeOwner && (
+          {loggedInUser && (
             <div style={{ marginTop: "20px" }}>
-              {hasAlreadyRated ? (
-                <p>You have already rated this recipe.</p>
-              ) : (
-                <>
-                  <strong>Rate this recipe:</strong>
-                  <StarRating newRating={handleRating}/>
-                </>
-              )}
+              <strong>Rate this recipe:</strong>
+              <StarRating newRating={handleRating} disabled={isRecipeOwner || hasAlreadyRated} />
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
@@ -178,7 +172,7 @@ const RecipeDetails = () => {
         </div>
       )}
 
-      {loggedInUser && !hasAlreadyRated && (
+      {loggedInUser && (
         <div style={{ width: "100%", maxWidth: "800px" }}>
           <RecipeCommentForm recipeId={id} loggedInUser={loggedInUser} />
         </div>

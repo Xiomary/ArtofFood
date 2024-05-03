@@ -51,7 +51,8 @@ const deleteUser = require('./routes/users/userDeleteAll');
 //file upload
 const fileUploadRoute = require('./routes/images/fileUpload');
 
-
+//get comment bi id
+const getCommentById = require('./routes/comments/commentGetById');
 
 const commentGetAllComments = require('./routes/comments/commentGetAllComments');
 
@@ -111,7 +112,8 @@ app.use('/ratings', ratingGetAllRoute);
 app.use('/ratings', ratingEditRoute);
 app.use('/ratings', ratingCheckUserRating);
 
-
+//commeny by id
+app.use('/comment', getCommentById);
 
 app.use('/comment', commentGetAllComments);
 
