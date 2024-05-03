@@ -12,7 +12,7 @@ const RecipeForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState({});
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); 
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -56,15 +56,16 @@ const RecipeForm = () => {
 
       setIsLoading(false);
       if (response.ok) {
-        setShowModal(true);
+        setShowModal(true); 
         setTitle("");
         setInstructions("");
         setIngredients("");
         setCuisineType("");
         setImage(null);
         setImagePreview(null);
+        window.location.href = '/recipeList'; 
       } else {
-        setError("Failed to add recipe. Please try again later.");
+        setError("Failed to add recipe. Please try again.");
       }
     } catch (error) {
       setIsLoading(false);
@@ -101,21 +102,6 @@ const RecipeForm = () => {
         fontFamily: "Roboto,Helvetica Neue, sans-serif",
       }}
     >
-      {error && (
-        <div
-          style={{
-            padding: "20px",
-            marginBottom: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            backgroundColor: "#f8f9fa",
-            color: "#6c757d",
-            fontFamily: "Roboto,Helvetica Neue, sans-serif",
-          }}
-        >
-          {error}
-        </div>
-      )}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -360,6 +346,17 @@ const RecipeForm = () => {
               color: "",
             }}
           />
+          {error && ( // Display the error message under Cuisine Type
+            <div
+              style={{
+                fontSize: "9px",
+                color: "red",
+                marginTop: "5px",
+              }}
+            >
+              {error}
+            </div>
+          )}
         </div>
 
         <button
@@ -379,14 +376,15 @@ const RecipeForm = () => {
         </button>
       </form>
 
-      {showModal && (
+      {showModal && ( // Conditionally render the "Recipe Submitted" message
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           <div
             style={{
               padding: "10px",
               border: "1px solid #ccc",
               borderRadius: "4px",
-              backgroundColor: "#f8f9fa",
+              backgroundColor: "#00A8FF", // Green color
+              color: "#fff", // White text
             }}
           >
             <p>Recipe Submitted</p>
