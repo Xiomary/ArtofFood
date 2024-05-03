@@ -107,71 +107,68 @@ const RecipeDetails = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px" }}>
-      {loadingRecipe || loadingUser ? (
-        <div style={{ color: "red" }}>Loading...</div>
-      ) : error ? (
-        <div style={{ color: "red" }}>{error}</div>
-      ) : !recipe ? (
-        <div style={{ color: "red" }}>Recipe not found.</div>
-      ) : (
+      {error && <div style={{ color: "red" }}>{error}</div>}
+      {!error && (
         <div className="recipe-card" style={{ maxWidth: "800px", width: "100%", background: "#f5f5f5", padding: "20px", borderRadius: "8px", boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", marginBottom: "20px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <div style={{ width: "70%" }}>
-              <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>{recipe.title}</h2>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-                <strong>Created by:</strong>&nbsp;{user ? user.username : "Unknown User"}
+          {loadingRecipe || loadingUser ? null : (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <div style={{ width: "70%" }}>
+                  <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>{recipe.title}</h2>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+                    <strong>Created by:</strong>&nbsp;{user ? user.username : "Unknown User"}
+                  </div>
+                </div>
+                <div style={{ width: "30%", textAlign: "right" }}>
+                  <div style={{ display: "inline-block", background: getRandomColor(), color: "#black", borderRadius: "15px", padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}>
+                    {recipe.cuisineType}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style={{ width: "30%", textAlign: "right" }}>
-              <div style={{ display: "inline-block", background: getRandomColor(), color: "#black", borderRadius: "15px", padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}>
-              
-                {recipe.cuisineType}
+              <div style={{ width: "100%", height: "300px", overflow: "hidden", marginBottom: "20px" }}>
+                <img src={recipe.imageUrl} alt={recipe.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
-            </div>
-          </div>
-          <div style={{ width: "100%", height: "300px", overflow: "hidden", marginBottom: "20px" }}>
-            <img src={recipe.imageUrl} alt={recipe.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Ingredients:</h3>
-            <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
-              {showAllIngredients ? recipe.ingredients.map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>) : recipe.ingredients.slice(0, 5).map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>)}
-            </div>
-            {recipe.ingredients.length > 5 && (
-              <button onClick={() => setShowAllIngredients(!showAllIngredients)} style={{ fontSize: "14px", marginTop: "10px", border: "none", background: "none", color: "#007bff", cursor: "pointer" }}>
-                {showAllIngredients ? "Show less" : "Show more"}
-              </button>
-            )}
-          </div>
-          <div>
-            <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Instructions:</h3>
-            <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
-              {recipe.instructions.map((instruction, index) => <p key={index}>{index + 1}. {instruction}</p>)}
-            </div>
-          </div>
-          {loggedInUser && (
-            <div style={{ marginTop: "20px" }}>
-              <strong>Rate this recipe:</strong>
-              <StarRating newRating={handleRating} disabled={isRecipeOwner || hasAlreadyRated} />
-            </div>
+              <div style={{ marginBottom: "20px" }}>
+                <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Ingredients:</h3>
+                <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
+                  {showAllIngredients ? recipe.ingredients.map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>) : recipe.ingredients.slice(0, 5).map((ingredient, index) => <p key={index}>{index + 1}. {ingredient}</p>)}
+                </div>
+                {recipe.ingredients.length > 5 && (
+                  <button onClick={() => setShowAllIngredients(!showAllIngredients)} style={{ fontSize: "14px", marginTop: "10px", border: "none", background: "none", color: "#007bff", cursor: "pointer" }}>
+                    {showAllIngredients ? "Show less" : "Show more"}
+                  </button>
+                )}
+              </div>
+              <div>
+                <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>Instructions:</h3>
+                <div style={{ whiteSpace: "pre-line", fontSize: "14px", lineHeight: "1.5" }}>
+                  {recipe.instructions.map((instruction, index) => <p key={index}>{index + 1}. {instruction}</p>)}
+                </div>
+              </div>
+              {loggedInUser && (
+                <div style={{ marginTop: "20px" }}>
+                  <strong>Rate this recipe:</strong>
+                  <StarRating newRating={handleRating} disabled={isRecipeOwner || hasAlreadyRated} />
+                </div>
+              )}
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                {loggedInUser && isRecipeOwner && (
+                  <>
+                    <Link to={`/recipeEdit/${recipe._id}`} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none", marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faEdit} style={{ color: "#00A8FF", marginRight: "4px" }} />
+                      EDIT
+                    </Link>
+                    <button onClick={handleDelete} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none" }}>
+                      <FontAwesomeIcon icon={faTrash} style={{ color: "#00A8FF", marginRight: "4px" }} />
+                      DELETE
+                    </button>
+                  </>
+                )}
+              </div>
+            </>
           )}
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
-            {loggedInUser && isRecipeOwner && (
-              <>
-                <Link to={`/recipeEdit/${recipe._id}`} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none", marginRight: "10px" }}>
-                  <FontAwesomeIcon icon={faEdit} style={{ color: "#00A8FF", marginRight: "4px" }} />
-                  EDIT
-                </Link>
-                <button onClick={handleDelete} className="btn btn-primary btn-sm" style={{ background: "transparent", color: "#00A8FF", border: "none" }}>
-                  <FontAwesomeIcon icon={faTrash} style={{ color: "#00A8FF", marginRight: "4px" }} />
-                  DELETE
-                </button>
-              </>
-            )}
-          </div>
         </div>
       )}
-
       {loggedInUser && (
         <div style={{ width: "100%", maxWidth: "800px" }}>
           <RecipeCommentForm recipeId={id} loggedInUser={loggedInUser} />
