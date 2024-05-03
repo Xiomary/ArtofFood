@@ -20,23 +20,27 @@ const Register = () => {
     height: '100vh',
   };
 
-  const formContainerStyle = {
+  const formStyle = {
     backgroundColor: 'white',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '2rem',
-    width: '400px', 
+    maxWidth: '500px',
+    width: '100%',
   };
   
+  const inputContainerStyle = {
+    width: '100%', // Set width to 100%
+  };
 
   const inputStyle = {
     border: `1px solid ${INPUT_BORDER_COLOR}`,
     borderRadius: '0',
     marginBottom: '1rem',
     padding: '0.5rem',
-    width: '100%',
+    width: '100%', // Set width to 100%
   };
 
   const registerButtonStyle = {
@@ -61,7 +65,7 @@ const Register = () => {
     try {
       const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/signup`;
       await axios.post(url, data);
-      navigate("/login"); // Navigate to login after successful registration
+      navigate("/loginPage");
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         setError(error.response.data.message);
@@ -73,9 +77,9 @@ const Register = () => {
 
   return (
     <div style={containerStyle}>
-      <div style={formContainerStyle}>
-        <Form onSubmit={handleSubmit}>
-          <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Register</h2>
+      <Form style={formStyle} onSubmit={handleSubmit}>
+        <h2 style={{ textAlign: 'left', marginBottom: '2rem', marginLeft: '0' }}>Register</h2>
+        <div style={inputContainerStyle}>
           <Form.Group controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -87,6 +91,8 @@ const Register = () => {
               style={inputStyle}
             />
           </Form.Group>
+        </div>
+        <div style={inputContainerStyle}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -98,6 +104,8 @@ const Register = () => {
               style={inputStyle}
             />
           </Form.Group>
+        </div>
+        <div style={inputContainerStyle}>
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -109,12 +117,12 @@ const Register = () => {
               style={inputStyle}
             />
           </Form.Group>
-          {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-          <Button type="submit" style={registerButtonStyle}>
-            Register
-          </Button>
-        </Form>
-      </div>
+        </div>
+        {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+        <Button type="submit" style={registerButtonStyle}>
+          Register
+        </Button>
+      </Form>
     </div>
   );
 };

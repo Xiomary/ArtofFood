@@ -5,6 +5,7 @@ import axios from "axios";
 import getUserInfo from "../../utilities/decodeJwt";
 import { Container, Row, Col } from "react-bootstrap";
 
+
 const ProfileCreate = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -70,8 +71,8 @@ const ProfileCreate = () => {
           },
         }
       );
-      alert("Profile updated successfully!");
-      console.log("Profile updated:", response.data);
+      
+     
     } catch (error) {
       console.error("Error creating profile:", error);
       setError(error.response?.data?.message || "Failed to create profile.");

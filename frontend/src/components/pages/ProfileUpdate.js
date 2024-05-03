@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { FaPencilAlt } from "react-icons/fa";
 import Button from "react-bootstrap/Button"; // Assuming you are using Bootstrap for Button component
+import Card from "react-bootstrap/Card";
 
 const ProfileUpdate = () => {
   const { userId } = useParams();
@@ -20,6 +21,7 @@ const ProfileUpdate = () => {
     imageUrl: "",
   });
   const fileInputRef = useRef(null);
+  const [showAddRecipeOverlay, setShowAddRecipeOverlay] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -86,90 +88,97 @@ const ProfileUpdate = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
-        <div style={{ marginRight: "20px" }}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            ref={fileInputRef}
-            style={{ display: "none" }}
-          />
-          {oldImage ? (
+      <Card style={{ width: "400px", margin: "auto" }}>
+        <Card.Body>
+          <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <div
               style={{
+                position: "relative",
                 width: "200px",
                 height: "200px",
-                borderRadius: "50%",
-                overflow: "hidden",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                margin: "auto",
               }}
             >
-              <img
-                src={oldImage}
-                alt={`${userProfile.name}'s profile`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                ref={fileInputRef}
+                style={{ display: "none" }}
               />
+              {oldImage ? (
+                <img
+                  src={oldImage}
+                  alt={`${userProfile.name}'s profile`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                  }}
+                />
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current.click()}
+                  onMouseEnter={() => setShowAddRecipeOverlay(true)}
+                  onMouseLeave={() => setShowAddRecipeOverlay(false)}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    backgroundColor: "#f8f9fa",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                    cursor: "pointer",
+                    color: "black",
+                  }}
+                >
+                  <div style={{ fontSize: "24px", color: "#333", marginBottom: "10px" }}>+</div>
+                  <div>Click to Add Image</div>
+                  {showAddRecipeOverlay && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        color: "#fff",
+                        fontSize: "16px",
+                      }}
+                    >
+                      Click to Add Image
+                    </div>
+                  )}
+                </div>
+              )}
               <div
-                onClick={handleRemoveImage}
+                onClick={() => fileInputRef.current.click()}
                 style={{
                   position: "absolute",
-                  top: "5px",
-                  right: "5px",
+                  top: "10px",
+                  right: "10px",
+                  backgroundColor: "#00A8FF",
                   borderRadius: "50%",
-                  width: "24px",
-                  height: "24px",
-                  backgroundColor: "#FF0000",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  padding: "5px",
+                  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
                   cursor: "pointer",
-                  border: "2px solid white",
-                  color: "white",
                 }}
               >
-                &minus;
+                <FaPencilAlt style={{ color: "#fff", fontSize: "16px" }} />
               </div>
             </div>
-          ) : (
-            <div
-              onClick={() => fileInputRef.current.click()}
-              style={{
-                width: "200px",
-                height: "200px",
-                borderRadius: "50%",
-                backgroundColor: "#f8f9fa",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                cursor: "pointer",
-                color: "black",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "24px",
-                  color: "#333",
-                  marginBottom: "10px",
-                }}
-              >
-                +
-              </div>
-              Click to Add Image
-            </div>
-          )}
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-            {editingName ? (
-              <>
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+              {editingName ? (
                 <input
                   type="text"
                   value={editedName}
@@ -178,24 +187,18 @@ const ProfileUpdate = () => {
                   autoFocus
                   style={{ borderBottom: "1px solid black", marginRight: "10px", padding: "8px 0" }}
                 />
-              </>
-            ) : (
-              <>
-                <div
-                  style={{ marginRight: "10px", borderBottom: editingName ? "1px solid black" : "none" }}
-                >
-                  {userProfile.name}
-                </div>
-                <FaPencilAlt
-                  style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
-                  onClick={() => setEditingName(true)}
-                />
-              </>
-            )}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
-            {editingBio ? (
-              <>
+              ) : (
+                <>
+                  <div style={{ marginRight: "10px" }}>{userProfile.name}</div>
+                  <FaPencilAlt
+                    style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
+                    onClick={() => setEditingName(true)}
+                  />
+                </>
+              )}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+              {editingBio ? (
                 <textarea
                   value={editedBio}
                   onChange={(e) => setEditedBio(e.target.value)}
@@ -203,40 +206,36 @@ const ProfileUpdate = () => {
                   autoFocus
                   style={{ width: "100%", borderBottom: "1px solid black", padding: "8px", marginRight: "10px", height: "80px" }}
                 />
-              </>
-            ) : (
-              <>
-                <p style={{ marginBottom: "0", flex: "1" }}>{userProfile.bio}</p>
-                <FaPencilAlt
-                  style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
-                  onClick={() => setEditingBio(true)}
-                />
-              </>
-            )}
+              ) : (
+                <>
+                  <div style={{ flex: "1", whiteSpace: "pre-wrap" }}>{userProfile.bio}</div>
+                  <FaPencilAlt
+                    style={{ cursor: "pointer", color: "#00A8FF", fontSize: "14px" }}
+                    onClick={() => setEditingBio(true)}
+                  />
+                </>
+              )}
+            </div>
+            <Link
+              to={`/profileDetails/${userId}`}
+              style={{
+                display: "block",
+                textAlign: "center",
+                padding: "8px 20px",
+                backgroundColor: "#00A8FF",
+                color: "#fff",
+                borderRadius: "4px",
+                fontSize: "15px",
+                textDecoration: "none",
+              }}
+            >
+              View Profile
+            </Link>
           </div>
-          <Link
-            to={`/profileDetails/${userId}`}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#00A8FF",
-              color: "#fff",
-              borderRadius: "4px",
-              fontSize: "15px",
-              textDecoration: "none",
-            }}
-          >
-            View Profile
-          </Link>
-        </div>
-      </div>
-
-      <div style={{ position: "fixed", bottom: 20, left: 20, width: "calc(100% - 40px)", backgroundColor: "rgba(255, 255, 255, 0.9)", padding: "20px", zIndex: 999 }}>
-        <div style={{ width: "100%" }}>
           <Button
             variant="primary"
             type="submit"
             style={{
-              padding: "8px 20px",
               backgroundColor: "#00A8FF",
               color: "#fff",
               border: "none",
@@ -248,8 +247,8 @@ const ProfileUpdate = () => {
           >
             SAVE
           </Button>
-        </div>
-      </div>
+        </Card.Body>
+      </Card>
     </div>
   );
 };
