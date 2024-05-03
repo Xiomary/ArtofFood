@@ -6,22 +6,23 @@ const Recipe = require("../../models/recipeModel");
 const s3UploadMiddleware = require('../../routes/images/fileUpload');
 
 // Route to update a recipe
-router.put("/update/:id", s3UploadMiddleware, async (req, res) => { // Use the S3 upload middleware here
+// Route to update a recipe
+router.put("/update/:id", s3UploadMiddleware, async (req, res) => {
   const recipeId = req.params.id;
-  const { title, ingredients, instructions, cuisineType, userId } = req.body;
-  const imageUrl = req.imageUrl; // Get the imageUrl from the request
+  const { title, ingredients, instructions, cuisineType, userId, existingImageKey } = req.body;
+  const imageUrl = req.imageUrl || null; // Use the new image URL or fallback to null if not updated
 
   try {
-    const updatedRecipeData = {
+    const updateFields = {
       title,
       ingredients,
       instructions,
       cuisineType,
       userId,
-      imageUrl,
+      ...(imageUrl && { imageUrl }), // Only update imageUrl if there's a new one
     };
 
-    const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, updatedRecipeData, { new: true });
+    const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, updateFields, { new: true });
     if (!updatedRecipe) {
       return res.status(404).json({ error: "Recipe not found" });
     }
@@ -33,5 +34,6 @@ router.put("/update/:id", s3UploadMiddleware, async (req, res) => { // Use the S
     res.status(400).json({ error: error.message });
   }
 });
+
 
 module.exports = router;
