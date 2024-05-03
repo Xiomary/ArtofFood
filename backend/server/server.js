@@ -59,8 +59,6 @@ const deleteCommentById = require('./routes/comments/commentDeleteById');
 
 
 
-//rating check user rating
-
 dotenv.config();
 
 const SERVER_PORT = process.env.PORT || 8081;
